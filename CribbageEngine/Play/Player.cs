@@ -35,7 +35,7 @@ namespace CribbageEngine.Play
 
         public int ScoreHand() 
         {
-            return Evaluation.EvaluateFullHand;
+            return Evaluation.EvaluateFullHand(GetHand(), CutCard);
         }
     }
 }
