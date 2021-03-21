@@ -1,14 +1,14 @@
-﻿using System;
+﻿using CribbageEngine.Play;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CribbageEngine
+namespace CribbageEngine.AI
 {
     public class ThrowingHandAI : ThrowingHand
     {
-        //TYPES
         public enum ThrowingStrategy
         {
             //This ENUM field pattern should be replaced with Strategy Pattern (almost too obvious)
@@ -22,8 +22,9 @@ namespace CribbageEngine
             Random,
             Invalid
         }
-        
-        //CONSTRUCTOR
+
+        private ThrowingStrategy _strategy;
+
         public ThrowingHandAI(Deck deck, ThrowingStrategy strategy, int DefaultStartingHandSize = 6) : base(deck, DefaultStartingHandSize)
         {
             _strategy = strategy;
@@ -31,7 +32,6 @@ namespace CribbageEngine
             //ThrowAway(_strategy);
         }
 
-        //METHODS
         protected void ThrowAway(ThrowingStrategy strategy)
         {
             //Figures out the best way to throw away
@@ -186,8 +186,5 @@ namespace CribbageEngine
 
             return value;
         }
-
-        //PRIVATE FIELDS
-        private ThrowingStrategy _strategy;
     }
 }

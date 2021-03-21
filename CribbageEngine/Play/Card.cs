@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CribbageEngine
+namespace CribbageEngine.Play
 {
     public class Card
     {
@@ -27,13 +27,20 @@ namespace CribbageEngine
         //This must be readonly because the values assigned to Faces aren't known at compiletime
         internal readonly FaceType[] FaceCards = { FaceType.Jack, FaceType.Queen, FaceType.King };
 
-        internal Card(int card)
+        internal Card(int card) 
+            : this((FaceType)(card % NumFaces + 1), (SuitType)(card / NumFaces))
         {
-            //Assigns all 13 faces for each suit
-            _face = (FaceType)(card % NumFaces + 1);
-            //Every 13 cards, suit changes
-            _suit = (SuitType)(card / NumFaces);
+            ////Assigns all 13 faces for each suit
+            //_face = (FaceType)(card % NumFaces + 1);
+            ////Every 13 cards, suit changes
+            //_suit = (SuitType)(card / NumFaces);
         }
+
+        public Card(FaceType face, SuitType suit)
+		{
+            _face = face;
+            _suit = suit;
+		}
 
         public override string ToString()
         {
@@ -68,36 +75,30 @@ namespace CribbageEngine
 
         public override bool Equals(object obj)
         {
-            return this == (Card) obj;
+            return this == (Card)obj;
         }
 
-        public static bool operator ==(Card l, Card r)
+        public static bool operator ==(Card lhs, Card rhs)
         {
-            if (ReferenceEquals(l, null) && ReferenceEquals(r, null))
+            if (ReferenceEquals(lhs, null) && ReferenceEquals(rhs, null))
             {
                 return true;
             }
-            else if (ReferenceEquals(l, null) || ReferenceEquals(r, null))
+            else if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
             {
                 return false;
             }
-            else
-            {
-                if (l.Suit == r.Suit && l.Face == r.Face)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+            return lhs.Suit == rhs.Suit && lhs.Face == rhs.Face;
         }
 
-        public static bool operator !=(Card l, Card r)
+        public static bool operator !=(Card lhs, Card rhs)
         {
-            return !(l == r);
+            return !(lhs == rhs);
         }
 
-    }
+		public override int GetHashCode()
+		{
+            return (int)this.Face + ((int)this.Suit * NumFaces);
+		}
+	}
 }

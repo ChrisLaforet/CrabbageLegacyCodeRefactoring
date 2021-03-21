@@ -1,10 +1,11 @@
-﻿using System;
+﻿using CribbageEngine.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CribbageEngine
+namespace CribbageEngine.Play
 {
     public class Deck
     {
@@ -40,9 +41,17 @@ namespace CribbageEngine
             }
         }
 
+        public int Remaining 
+        { 
+            get
+			{
+                return _cards.Length - _top;
+			}
+        }
+
         public void Shuffle()
         {
-            //TODO: It might be better to refactor this random object
+//TODO: It might be better to refactor this random object
             Random r = new Random();
             //Swaps every card with a random position (can be itself)
             //Ensures virtually infinite entropy I think
@@ -62,15 +71,11 @@ namespace CribbageEngine
         
         public Card Draw()
         {
-            //Returns top card, moves top position down one
             if (_top < NumCards)
             {
                 return _cards[_top++];
             }
-            else
-            {
-                throw new IndexOutOfRangeException("Out of cards error!");
-            }
+            throw new DeckOutOfCardsException("Out of cards error!");
         }
         
         public override string ToString()

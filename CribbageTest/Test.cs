@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using CribbageEngine;
+using CribbageEngine.AI;
+using CribbageEngine.Play;
 
 namespace CribbageTest
 {
