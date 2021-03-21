@@ -36,8 +36,10 @@ namespace CribbageTest
 
                 bool success = ai.CompareCribStrategies();
 
-                if (success) same++;
-                else different++;
+                if (success)
+                    same++;
+                else
+                    different++;
             }
 
             //Returns percentage of trials that gave same result

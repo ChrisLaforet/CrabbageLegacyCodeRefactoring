@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CribbageEngine
+namespace CribbageEngine.Play
 {
     public static class Evaluation
     {
@@ -33,12 +33,12 @@ namespace CribbageEngine
                 var suits = new Card.SuitType[cards.Count()];
                 var values = new int[cards.Count()];
 
-                for (int i = 0; i < cards.Count(); i++)
+                for (int index = 0; index < cards.Count(); index++)
                 {
-                    faces[i] = cards[i].Face;
-                    faceVals[(int)cards[i].Face]++;
-                    suits[i] = cards[i].Suit;
-                    values[i] = cards[i].Value;
+                    faces[index] = cards[index].Face;
+                    faceVals[(int)cards[index].Face]++;
+                    suits[index] = cards[index].Suit;
+                    values[index] = cards[index].Value;
                 }
 
                 int fifteens = FindFifteens(values);
@@ -85,7 +85,7 @@ namespace CribbageEngine
             //Looks at every possible combo you can make from cards in hand
             foreach (var combo in HelperFunctions.GetPowerSet(values.Count()))
             {
-                foreach(int i in combo)
+                foreach (int i in combo)
                 {
                     //Sums all values
                     sum += values[i];
@@ -106,15 +106,16 @@ namespace CribbageEngine
         {
             //HOYLE RULES:
             //Pair: 2 points, Triple: 6 points, Quad: 12 points
-            //Although that's just the rule of thumb. Technically all pairs are just worth 2 points, 3 of a kind is 3 pairs
+            //Although that's just the rule of thumb. Technically all pairs are just worth 2 points, 
+            //  3 of a kind is 3 pairs
             int total = 0;
 
             //Handshake all of the cards together - pretty simple
-            for (int i = 0; i < faces.Count(); i++)
+            for (int index = 0; index < faces.Count(); index++)
             {
-                for (int j = i + 1; j < faces.Count(); j++)
+                for (int j = index + 1; j < faces.Count(); j++)
                 {
-                    if (faces[i] == faces[j])
+                    if (faces[index] == faces[j])
                     {
                         total += PairValue;
                     }
@@ -129,10 +130,10 @@ namespace CribbageEngine
             int multiplier = 0;
             int consec = 0;
 
-            for (int i = 0; i < faceVals.Count(); i++)
+            for (int index = 0; index < faceVals.Count(); index++)
             {
                 //Run is over - or hasn't begin
-                if (faceVals[i] == 0)
+                if (faceVals[index] == 0)
                 {
                     //When leaving run, generate point report
                     if (consec >= 3)
@@ -157,7 +158,7 @@ namespace CribbageEngine
                         multiplier = 1;
                     }
                     //Consecutive multiplier allows double double run to be counted as 4
-                    multiplier *= faceVals[i];
+                    multiplier *= faceVals[index];
                     consec++;
                 }
             }
@@ -202,10 +203,10 @@ namespace CribbageEngine
             //Choose the first suit that isn't the cut card
             var suit = suits[cutIndex != 0 ? 0 : 1];
             
-            for (int i = 0; i < suits.Count(); i++)
+            for (int index = 0; index < suits.Count(); index++)
             {
                 //Check all suits in the hand
-                if (i != cutIndex && suits[i] != suit)
+                if (index != cutIndex && suits[index] != suit)
                 {
                     //There was a card with a different suit
                     return 0;

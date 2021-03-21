@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="Play\Card.cs" />
     <Compile Include="Play\Deck.cs" />
-    <Compile Include="Evaluation.cs" />
+    <Compile Include="Play\Evaluation.cs" />
     <Compile Include="Exceptions\DeckOutOfCardsException.cs" />
     <Compile Include="Play\Game.cs" />
     <Compile Include="Helper.cs" />

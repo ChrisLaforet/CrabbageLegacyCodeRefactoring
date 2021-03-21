@@ -51,22 +51,29 @@ namespace CribbageEngine.Play
 
         public void Shuffle()
         {
-//TODO: It might be better to refactor this random object
-            Random r = new Random();
-            //Swaps every card with a random position (can be itself)
-            //Ensures virtually infinite entropy I think
-            for(int i = 0; i < NumCards; i++)
-            {
-                //Stores swapcard because random
-                int swap = r.Next(NumCards);
-
-                //Swap
-                Card temp = _cards[i];
-                _cards[i] = _cards[swap];
-                _cards[swap] = temp;
-            }
+            Random rng = new Random();
+            for (int round = 0; round < 2 + rng.Next(3); round++)
+			{
+                Shuffle(rng);
+			}
             //Resets top of the deck to 0
             _top = 0;
+        }
+
+        private void Shuffle(Random rng)
+		{
+            //Swaps every card with a random position (can be itself)
+            //Ensures virtually infinite entropy I think
+            for (int index = 0; index < NumCards; index++)
+            {
+                int swap = rng.Next(NumCards);
+                if (index != swap)
+                {
+                    Card temp = _cards[index];
+                    _cards[index] = _cards[swap];
+                    _cards[swap] = temp;
+                }
+            }
         }
         
         public Card Draw()
