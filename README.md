@@ -4,7 +4,7 @@ The purpose of pulling this code and engaging with it is twofold:
 - To practice implementing tests on a legacy codebase for refactoring and extending the code with TDD
 - To a lesser extent, as this exercise moves forward, to implement the original author's intent for the code.
 
-## REFATORING TODO:
+## CHRIS' REFACTORING TODO:
 - Pin current functionality with characterization tests
 - Identify areas with poor architecture and refine them with TDD
 - Identify incomplete areas and implement them with TDD
