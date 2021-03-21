@@ -8,17 +8,16 @@ namespace CribbageEngine
 {
     public class Card
     {
-        //ENUMS
         public enum SuitType
         {
             Spades, Hearts, Clubs, Diamonds
         }
+
         public enum FaceType
         {
             Ace = 1, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King
         }
 
-        //CONSTANTS
         public const int NumSuits = 4;
         public const int NumFaces = 13;
 
@@ -28,8 +27,7 @@ namespace CribbageEngine
         //This must be readonly because the values assigned to Faces aren't known at compiletime
         internal readonly FaceType[] FaceCards = { FaceType.Jack, FaceType.Queen, FaceType.King };
 
-        //CONSTRUCTOR
-        public Card(int card)
+        internal Card(int card)
         {
             //Assigns all 13 faces for each suit
             _face = (FaceType)(card % NumFaces + 1);
@@ -37,16 +35,20 @@ namespace CribbageEngine
             _suit = (SuitType)(card / NumFaces);
         }
 
-        //METHODS
         public override string ToString()
         {
             //Used for debugging
             return Face.ToString() + " of " + Suit.ToString();
         }
 
-        //PROPERTIES
+
+        // TODO: convert into proper properties (get/set)
+        private readonly SuitType _suit;
+        private readonly FaceType _face;
+
         public SuitType Suit { get { return _suit; } }
         public FaceType Face { get { return _face; } }
+
         public int Value
         {
             get
@@ -64,11 +66,6 @@ namespace CribbageEngine
             }
         }
 
-        //INTERNAL FIELDS
-        private readonly SuitType _suit;
-        private readonly FaceType _face;
-
-        //OPERATOR OVERLOADS
         public override bool Equals(object obj)
         {
             return this == (Card) obj;

@@ -8,13 +8,16 @@ namespace CribbageEngine
 {
     public class Deck
     {
-        //CONSTANTS
-        public const int NumCards = 52;
-       
-        //CONSTRUCTOR
+        public const int NumCards = Card.NumFaces * Card.NumSuits;
+
+        private readonly Card[] _cards;
+
+        //Keeps track of the top of the deck, like a stack
+        //Only the deck needs to know where this is
+        private int _top;
+
         public Deck()
         {
-
             //Allocates card array (the box of cards I guess)
             //Adds all 52 cards to the deck
             _cards = Deck.All;
@@ -23,7 +26,6 @@ namespace CribbageEngine
             Shuffle();
         }
 
-        //PROPERTIES
         public static Card[] All
         {
             //This should probably be a readonly singleton to save memory... research later
@@ -38,10 +40,9 @@ namespace CribbageEngine
             }
         }
 
-        //METHODS
         public void Shuffle()
         {
-            //It might be better to refactor this random object
+            //TODO: It might be better to refactor this random object
             Random r = new Random();
             //Swaps every card with a random position (can be itself)
             //Ensures virtually infinite entropy I think
@@ -75,21 +76,13 @@ namespace CribbageEngine
         public override string ToString()
         {
             //Used for debugging
-            string allCards = "";
+            StringBuilder allCards = new StringBuilder(1024);
             foreach (Card card in _cards)
             {
-                allCards += card.ToString() + Environment.NewLine;
+                allCards.Append(card.ToString());
+                allCards.Append(Environment.NewLine);
             }
-            return allCards;
+            return allCards.ToString();
         }
-
-        //PRIVATE FIELDS
-        //The array of cards
-        private Card[] _cards;
-        
-        //Keeps track of the top of the deck, like a stack
-        //Only the deck needs to know where this is
-        private int _top;
     }
-
 }
