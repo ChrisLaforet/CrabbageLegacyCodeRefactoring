@@ -10,18 +10,17 @@ namespace CribbageEngine.Play
     {
         private List<Card> _hand = new List<Card>();
 
-        public Card CutCard
+        public Player() 
+        {
+            this.Score = 0;
+        }
+
+        public Player(string name) : this()
 		{
-            get;
-            private set;
+            this.Name = name;
 		}
 
-        public Player() { }
-
-        public Player(Card cutCard)
-		{
-            CutCard = cutCard;
-		}
+        public string Name { get; private set; }
 
         public void AddCard(Card card)
         {
@@ -33,9 +32,11 @@ namespace CribbageEngine.Play
             return _hand.ToArray();
         }
 
-        public int ScoreHand() 
-        {
-            return Evaluation.EvaluateFullHand(GetHand(), CutCard);
-        }
+        public int Score { get; private set; }
+
+        //public int ScoreHand(Card starter) 
+        //{
+        //    return Evaluation.EvaluateFullHand(GetHand(), starter);
+        //}
     }
 }

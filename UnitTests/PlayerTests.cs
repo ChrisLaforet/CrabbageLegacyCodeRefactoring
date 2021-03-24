@@ -8,8 +8,11 @@ using System.Threading.Tasks;
 
 namespace UnitTests
 {
-	class PlayerAndGameTests
+	class PlayerTests
 	{
+		public const string PLAYER1_NAME = "Johnny";
+		public const string PLAYER2_NAME = "Suzie";
+
 		[Test]
 		public void givenAPlayerWithoutCards_whenAddCardToHand_thenReturnsCardWhenQueried()
 		{
@@ -17,7 +20,13 @@ namespace UnitTests
 			Player player = new Player();
 			player.AddCard(card);
 			Assert.AreEqual(card, player.GetHand()[0]);
+		}
 
+		[Test]
+		public void givenNothing_whenCreatingAPlayerWithAName_thenReturnsTheNameWhenQueried()
+		{
+			Player player = new Player(PLAYER1_NAME);
+			Assert.AreEqual(PLAYER1_NAME, player.Name);
 		}
 	}
 }
