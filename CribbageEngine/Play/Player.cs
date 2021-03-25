@@ -27,6 +27,8 @@ namespace CribbageEngine.Play
             _hand.Add(card);
         }
 
+        public bool IsDealer { get; set; }
+
         public Card[] GetHand()
         {
             return _hand.ToArray();

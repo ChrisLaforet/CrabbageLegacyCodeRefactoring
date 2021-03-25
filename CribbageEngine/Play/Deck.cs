@@ -10,8 +10,11 @@ namespace CribbageEngine.Play
     public class Deck
     {
         public const int NumCards = Card.NumFaces * Card.NumSuits;
+        public const int MINIMUM_CUT_CARDS = 6;
 
         private readonly Card[] _cards;
+        private Random rng = new Random();
+
 
         //Keeps track of the top of the deck, like a stack
         //Only the deck needs to know where this is
@@ -49,9 +52,15 @@ namespace CribbageEngine.Play
 			}
         }
 
+        public Card GetStarterCard()
+		{
+            int cutSize = Remaining - 2 * MINIMUM_CUT_CARDS;
+            int cutSpot = rng.Next(0, cutSize) + MINIMUM_CUT_CARDS;
+            return _cards[cutSpot];
+        }
+
         public void Shuffle()
         {
-            Random rng = new Random();
             for (int round = 0; round < 2 + rng.Next(3); round++)
 			{
                 Shuffle(rng);
