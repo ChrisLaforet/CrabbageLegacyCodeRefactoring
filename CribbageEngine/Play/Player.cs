@@ -34,7 +34,12 @@ namespace CribbageEngine.Play
             return _hand.ToArray();
         }
 
-        public int Score { get; private set; }
+        public int Score { get; private set;  }
+
+        public void AddScore(int points)
+		{
+            this.Score += points; 
+		}
 
         //public int ScoreHand(Card starter) 
         //{

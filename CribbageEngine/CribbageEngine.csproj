@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\InvalidStateException.cs" />
     <Compile Include="Exceptions\OperationNotPermittedException.cs" />
     <Compile Include="Exceptions\InvalidCribCardCountException.cs" />
     <Compile Include="Exceptions\NotEnoughPlayersException.cs" />
@@ -49,12 +50,15 @@
     <Compile Include="Exceptions\TooManyDealersException.cs" />
     <Compile Include="Exceptions\TooManyPlayersException.cs" />
     <Compile Include="Play\Card.cs" />
+    <Compile Include="Play\CountSession.cs" />
     <Compile Include="Play\Deck.cs" />
     <Compile Include="Play\Evaluation.cs" />
     <Compile Include="Exceptions\DeckOutOfCardsException.cs" />
     <Compile Include="Play\Game.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="Play\PlayScore.cs" />
     <Compile Include="Play\Round.cs" />
+    <Compile Include="Play\RoundPlayer.cs" />
     <Compile Include="ThrowingHand.cs" />
     <Compile Include="Play\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

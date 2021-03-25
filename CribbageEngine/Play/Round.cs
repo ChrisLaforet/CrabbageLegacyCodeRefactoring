@@ -14,11 +14,31 @@ namespace CribbageEngine.Play
 
 		private Deck _deck = new Deck();
 		private IList<Card> _crib = new List<Card>();
+		private IList<RoundPlayer> _players = new List<RoundPlayer>();
 
 		public Round(Game game)
 		{
 			this.Game = game;
 			this._deck.Shuffle();
+			foreach (Player player in game.Players)
+			{
+				_players.Add(new RoundPlayer(player));
+			}
+		}
+
+		public RoundPlayer Dealer
+		{
+			get
+			{
+				foreach (RoundPlayer player in _players)
+				{
+					if (player.Player.IsDealer)
+					{
+						return player;
+					}
+				}
+				throw new InvalidStateException("Round does not have a Dealer");
+			}
 		}
 
 		public bool IsStarted { get; private set; }
@@ -109,7 +129,7 @@ namespace CribbageEngine.Play
 			this.IsStarted = true;
 		}
 
-		public void StartPlay()
+		public CountSession StartPlay()
 		{
 			AssertIsStarted();
 			AssertPlayIsNotStarted();
@@ -119,6 +139,11 @@ namespace CribbageEngine.Play
 			}
 
 			this.StarterCard = _deck.GetStarterCard();
+			if (this.StarterCard.Face == Card.FaceType.Jack)
+			{
+				this.Dealer.AddScore(PlayScore.ScoreType.HisHeels, Evaluation.HeelsValue);
+			}
+			return new CountSession(this, Game.Players[0]);
 		}
 	}
 }

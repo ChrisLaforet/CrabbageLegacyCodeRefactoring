@@ -13,9 +13,12 @@ namespace CribbageEngine.Play
         //But they should probably be static, logically
         //The rules of cribbage don't require cards to exist?
 
-        const int FifteenValue = 2;
-        const int PairValue = 2;
-        const int KnobsValue = 1;
+        public const int FifteenValue = 2;
+        public const int PairValue = 2;
+        public const int KnobsValue = 1;
+        public const int HeelsValue = 2;
+        public const int GoValue = 1;
+        public const int ThirtyOneValue = 2;
 
         public static int EvaluateFullHand(Card[] cards, int cutIndex)
         {
