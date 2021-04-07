@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CribbageEngine.Play
 {
-    public class Player
+    public abstract class Player
     {
         private List<Card> _hand = new List<Card>();
 
@@ -40,6 +40,8 @@ namespace CribbageEngine.Play
 		{
             this.Score += points; 
 		}
+
+        public abstract IPlayResponse Play(CountSession currentCount);
 
         //public int ScoreHand(Card starter) 
         //{

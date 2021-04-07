@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CribbageEngine.Play
 {
-    public class Card
+    public class Card : IPlayResponse
     {
         public enum SuitType
         {

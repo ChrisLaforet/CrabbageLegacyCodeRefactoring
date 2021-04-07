@@ -36,8 +36,8 @@ namespace UnitTests
 		private static Game Prepare2PlayerGame()
 		{
 			Game game = new Game();
-			game.RegisterPlayer(new Player(PlayerTests.PLAYER1_NAME));
-			game.RegisterPlayer(new Player(PlayerTests.PLAYER2_NAME));
+			game.RegisterPlayer(new TestPlayer(PlayerTests.PLAYER1_NAME));
+			game.RegisterPlayer(new TestPlayer(PlayerTests.PLAYER2_NAME));
 			return game;
 		}
 
