@@ -8,14 +8,14 @@ namespace CribbageEngine.Play
 {
     public abstract class Player
     {
-        private List<Card> _hand = new List<Card>();
+        private readonly List<Card> _hand = new List<Card>();
 
-        public Player() 
+        protected Player() 
         {
             this.Score = 0;
         }
 
-        public Player(string name) : this()
+        protected Player(string name) : this()
 		{
             this.Name = name;
 		}
@@ -33,6 +33,11 @@ namespace CribbageEngine.Play
         {
             return _hand.ToArray();
         }
+
+        public bool HasCards()
+		{
+            return _hand.Count > 0;
+		}
 
         public int Score { get; private set;  }
 

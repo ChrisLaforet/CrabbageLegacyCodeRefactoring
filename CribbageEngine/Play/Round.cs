@@ -12,9 +12,9 @@ namespace CribbageEngine.Play
 		public const int INITIAL_DEAL_CARD_COUNT = 6;
 		public const int PER_PLAYER_CRIB_CARD_COUNT = 2;
 
-		private Deck _deck = new Deck();
-		private IList<Card> _crib = new List<Card>();
-		private IList<RoundPlayer> _players = new List<RoundPlayer>();
+		private readonly Deck _deck = new Deck();
+		private readonly IList<Card> _crib = new List<Card>();
+		private readonly IList<RoundPlayer> _players = new List<RoundPlayer>();
 
 		public Round(Game game)
 		{
@@ -22,24 +22,23 @@ namespace CribbageEngine.Play
 			this._deck.Shuffle();
 			foreach (Player player in game.Players)
 			{
-				_players.Add(new RoundPlayer(player));
+				_players.Add(new RoundPlayer(this, player));
 			}
 		}
 
-		public RoundPlayer Dealer
+		public RoundPlayer GetDealer()
 		{
-			get
+			foreach (RoundPlayer player in _players)
 			{
-				foreach (RoundPlayer player in _players)
+				if (player.Player.IsDealer)
 				{
-					if (player.Player.IsDealer)
-					{
-						return player;
-					}
+					return player;
 				}
-				throw new InvalidStateException("Round does not have a Dealer");
 			}
+			throw new InvalidStateException("Round does not have a Dealer");
 		}
+
+		public RoundPlayer NextPlayer { get; private set; }
 
 		public bool IsStarted { get; private set; }
 
@@ -129,7 +128,7 @@ namespace CribbageEngine.Play
 			this.IsStarted = true;
 		}
 
-		public CountSession StartPlay()
+		public void StartPlay()
 		{
 			AssertIsStarted();
 			AssertPlayIsNotStarted();
@@ -141,9 +140,36 @@ namespace CribbageEngine.Play
 			this.StarterCard = _deck.GetStarterCard();
 			if (this.StarterCard.Face == Card.FaceType.Jack)
 			{
-				this.Dealer.AddScore(PlayScore.ScoreType.HisHeels, Evaluation.HeelsValue);
+				this.GetDealer().AddScore(PlayScore.ScoreType.HisHeels, Evaluation.HeelsValue);
+			}
+
+			PlayRound();
+		}
+
+		private void PlayRound() 
+		{ 
+			while (PlayersHaveCards())
+			{
+
 			}
 			return new CountSession(this, Game.Players[0]);
+		}
+
+		private bool PlayersHaveCards()
+		{
+			foreach (RoundPlayer player in _players)
+			{
+				if (player.HasCards())
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private void PlaySession()
+		{
+
 		}
 	}
 }

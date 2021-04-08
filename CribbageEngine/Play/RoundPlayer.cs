@@ -10,8 +10,9 @@ namespace CribbageEngine.Play
 	{
 		private List<PlayScore> _playScores = new List<PlayScore>();
 
-		public RoundPlayer(Player player)
+		public RoundPlayer(Round round, Player player)
 		{
+			this.Round = round;
 			this.Player = player;
 		}
 
@@ -27,6 +28,13 @@ namespace CribbageEngine.Play
 		}
 
 		public Player Player { get; private set; }
+
+		private Round Round { get; set; }
+
+		public bool HasCards()
+		{
+			return Player.HasCards();
+		}
 		
 		public List<PlayScore> Scores
 		{
@@ -34,6 +42,20 @@ namespace CribbageEngine.Play
 			{
 				return _playScores;
 			}
+		}
+
+		public IPlayResponse Play(CountSession currentCount)
+		{
+			IPlayResponse response = Player.Play();
+
+			if (response is Pass)
+			{
+				Round.NextPlayer.AddScore();
+			}
+			// tally play score
+			AddScore();
+
+			return response;
 		}
 	}
 }
