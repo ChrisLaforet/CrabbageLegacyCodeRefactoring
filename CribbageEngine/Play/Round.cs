@@ -15,6 +15,7 @@ namespace CribbageEngine.Play
 		private readonly Deck _deck = new Deck();
 		private readonly IList<Card> _crib = new List<Card>();
 		private readonly IList<RoundPlayer> _players = new List<RoundPlayer>();
+		private int _nextPlayerIndex;
 
 		public Round(Game game)
 		{
@@ -38,7 +39,7 @@ namespace CribbageEngine.Play
 			throw new InvalidStateException("Round does not have a Dealer");
 		}
 
-		public RoundPlayer NextPlayer { get; private set; }
+		public RoundPlayer NextPlayer => _players[_nextPlayerIndex];
 
 		public bool IsStarted { get; private set; }
 
@@ -143,16 +144,34 @@ namespace CribbageEngine.Play
 				this.GetDealer().AddScore(PlayScore.ScoreType.HisHeels, Evaluation.HeelsValue);
 			}
 
+			FindFirstPlayer();
 			PlayRound();
+		}
+
+		private void FindFirstPlayer()
+		{
+			if (_players[0].Player.IsDealer)
+			{
+				_nextPlayerIndex = 1;
+			} 
+			else if (_players.Count > 2 && _players[1].Player.IsDealer)
+			{
+				_nextPlayerIndex = 2;
+			}
+			else
+			{
+				_nextPlayerIndex = 0;
+			}
 		}
 
 		private void PlayRound() 
 		{ 
 			while (PlayersHaveCards())
 			{
+				PlaySession();
 
 			}
-			return new CountSession(this, Game.Players[0]);
+//			return new CountSession(this, Game.Players[0]);
 		}
 
 		private bool PlayersHaveCards()
@@ -167,8 +186,21 @@ namespace CribbageEngine.Play
 			return false;
 		}
 
+		private void RotatePlayer()
+		{
+			_nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
+		}
+
 		private void PlaySession()
 		{
+			while (PlayersHaveCards())
+			{
+				RoundPlayer currentPlayer = NextPlayer;
+				RotatePlayer();
+
+				IPlayResponse response = currentPlayer.Play();
+				// get total - is it legal?
+			}
 
 		}
 	}
