@@ -166,12 +166,10 @@ namespace CribbageEngine.Play
 
 		private void PlayRound() 
 		{ 
-			while (PlayersHaveCards())
+			while (PlayersHaveCards() && PlayerIsNotWinner())
 			{
 				PlaySession();
-
 			}
-//			return new CountSession(this, Game.Players[0]);
 		}
 
 		private bool PlayersHaveCards()
@@ -186,22 +184,64 @@ namespace CribbageEngine.Play
 			return false;
 		}
 
+		private bool PlayerIsNotWinner()
+		{
+			foreach (RoundPlayer player in _players)
+			{
+				if (player.Score >= Evaluation.GAME_WINNING_SCORE)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 		private void RotatePlayer()
 		{
 			_nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
 		}
 
+		internal void RackScore(RoundPlayer player, PlayScore newScore)
+		{
+			Game.RackScore(player, newScore);
+		}
+
 		private void PlaySession()
 		{
+			List<Card> sessionCards = new List<Card>();
+			int sessionScore = 0;
+
+			RoundPlayer currentPlayer = NextPlayer;
+			RotatePlayer();
 			while (PlayersHaveCards())
 			{
-				RoundPlayer currentPlayer = NextPlayer;
-				RotatePlayer();
-
-				IPlayResponse response = currentPlayer.Play();
-				// get total - is it legal?
+				bool playLegal = true;
+				IPlayResponse response = currentPlayer.Play(sessionCards.ToArray());
+				if (response is Card)
+				{
+					Card card = response as Card;
+					if (sessionScore + card.Value > PlayScore.MAX_PLAY_SCORE)
+					{
+						// event - illegal card
+						playLegal = false;
+					}
+					else
+					{
+						sessionCards.Add(card);
+						sessionScore += card.Value;
+						PlayScore[] scores = Evaluation.EvaluatePlayHand(sessionCards.ToArray());
+						if (scores.Length > 0)
+						{
+							currentPlayer.AddScores(scores);
+						}
+					}
+				}
+				if (playLegal)
+				{
+					currentPlayer = NextPlayer;
+					RotatePlayer();
+				}
 			}
-
 		}
 	}
 }

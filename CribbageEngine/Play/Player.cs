@@ -46,11 +46,6 @@ namespace CribbageEngine.Play
             this.Score += points; 
 		}
 
-        public abstract IPlayResponse Play(CountSession currentCount);
-
-        //public int ScoreHand(Card starter) 
-        //{
-        //    return Evaluation.EvaluateFullHand(GetHand(), starter);
-        //}
+        public abstract IPlayResponse Play(Card[] sessionCards);
     }
 }

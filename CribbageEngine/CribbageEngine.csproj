@@ -57,6 +57,7 @@
     <Compile Include="Play\Game.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Play\IPlayResponse.cs" />
+    <Compile Include="Play\IScoreBoard.cs" />
     <Compile Include="Play\Pass.cs" />
     <Compile Include="Play\PlayScore.cs" />
     <Compile Include="Play\Round.cs" />

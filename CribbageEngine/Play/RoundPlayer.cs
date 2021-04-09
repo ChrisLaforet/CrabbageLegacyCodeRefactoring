@@ -20,6 +20,16 @@ namespace CribbageEngine.Play
 		{
 			_playScores.Add(playScore);
 			Player.AddScore(playScore.Score);
+
+			Round.RackScore(this, playScore);
+		}
+
+		public void AddScores(IEnumerable<PlayScore> playScores)
+		{
+			foreach (PlayScore playScore in playScores)
+			{
+				this.AddScore(playScore);
+			}
 		}
 
 		public void AddScore(PlayScore.ScoreType type, int count)
@@ -44,17 +54,21 @@ namespace CribbageEngine.Play
 			}
 		}
 
-		public IPlayResponse Play(CountSession currentCount)
+		public int Score
 		{
-			IPlayResponse response = Player.Play();
+			get
+			{
+				return Player.Score;
+			}
+		}
 
+		public IPlayResponse Play(Card[] sessionCards)
+		{
+			IPlayResponse response = Player.Play(sessionCards);
 			if (response is Pass)
 			{
-				Round.NextPlayer.AddScore();
+				Round.NextPlayer.AddScore(PlayScore.ScoreType.Play_Go, Evaluation.GoValue);
 			}
-			// tally play score
-			AddScore();
-
 			return response;
 		}
 	}

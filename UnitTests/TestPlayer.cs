@@ -9,7 +9,7 @@ namespace UnitTests
 
 		public TestPlayer(String playerName) : base(playerName) { }
 
-		public override IPlayResponse Play(CountSession currentCount)
+		public override IPlayResponse Play(Card[] sessionCards)
 		{
 			throw new NotImplementedException();
 		}

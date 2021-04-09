@@ -1,4 +1,5 @@
-﻿using CribbageEngine.Play;
+﻿using CribbageEngine.Exceptions;
+using CribbageEngine.Play;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace CribbageEngine.Play
 {
     public static class Evaluation
     {
+        public const int GAME_WINNING_SCORE = 121;
+
         //If there was a HAND class or something, these could be methods
         //But they should probably be static, logically
         //The rules of cribbage don't require cards to exist?
@@ -19,6 +22,98 @@ namespace CribbageEngine.Play
         public const int HeelsValue = 2;
         public const int GoValue = 1;
         public const int ThirtyOneValue = 2;
+
+        public static PlayScore[] EvaluatePlayHand(Card[] playOrderedCards)
+		{
+            List<PlayScore> playScores = new List<PlayScore>();
+
+            int runningScore = TallyRunningScoreFor(playOrderedCards);
+            if (runningScore > PlayScore.THIRTY_ONE_SCORE)
+			{
+                throw new InvalidStateException("A play session cannot exceed " + PlayScore.THIRTY_ONE_SCORE + " points");
+			}
+            else if (runningScore == PlayScore.FIFTEEN_SCORE)
+			{
+                playScores.Add(new PlayScore(PlayScore.ScoreType.Play_Fifteen, FifteenValue));
+			} 
+            else if (runningScore == PlayScore.THIRTY_ONE_SCORE)
+			{
+                playScores.Add(new PlayScore(PlayScore.ScoreType.Play_ThirtyOne, ThirtyOneValue));
+            }
+
+            if (playOrderedCards.Length > 1)
+			{
+                Card[] lastPlayedOrder = playOrderedCards.Reverse().ToArray();
+                Card.FaceType toMatch = lastPlayedOrder[0].Face;
+                int matches = 0;
+                for (int index = 1; index < lastPlayedOrder.Length; index++)
+				{
+                    if (lastPlayedOrder[index].Face != toMatch)
+					{
+                        break;
+					}
+                    ++matches;
+				}
+                
+                switch (matches)
+				{
+                    case 1:
+                        playScores.Add(new PlayScore(PlayScore.ScoreType.Play_Pair, PairValue));
+                        break;
+
+                    case 2:
+                        playScores.Add(new PlayScore(PlayScore.ScoreType.Play_Triplet, PairValue * 3));
+                        break;
+
+                    case 3:
+                        playScores.Add(new PlayScore(PlayScore.ScoreType.Play_Four, PairValue * 6));
+                        break;
+				}
+
+                int sequenceCount = 1;
+                int lastValue = lastPlayedOrder[0].Value;
+                bool isAscending = false;
+                for (int index = 1; index < lastPlayedOrder.Length; index++)
+				{
+                    int value = lastPlayedOrder[index].Value;
+                    if (index == 1)
+					{
+                        if (lastValue + 1 == value)
+						{
+                            isAscending = true;
+						}
+                        else if (lastValue - 1 != value)
+						{
+						}
+					}
+                    if (isAscending && value == lastValue + 1 ||
+                        !isAscending && value == lastValue - 1)
+					{
+                        ++sequenceCount;
+                        lastValue = value;
+					}
+                    else
+					{
+                        break;
+					}
+				}
+                if (sequenceCount >= 3)
+				{
+                    playScores.Add(new PlayScore(PlayScore.ScoreType.Play_Sequence, sequenceCount));
+				}
+            }
+            return playScores.ToArray();
+		}
+
+        private static int TallyRunningScoreFor(Card[] cards)
+		{
+            int runningScore = 0;
+            foreach (Card card in cards)
+			{
+                runningScore += card.Value;
+			}
+            return runningScore;
+		}
 
         public static int EvaluateFullHand(Card[] cards, int cutIndex)
         {

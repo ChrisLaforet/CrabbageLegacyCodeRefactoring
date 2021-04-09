@@ -8,6 +8,11 @@ namespace CribbageEngine.Play
 {
 	public class PlayScore
 	{
+		public const int MAX_PLAY_SCORE = THIRTY_ONE_SCORE;
+
+		public const int FIFTEEN_SCORE = 15;
+		public const int THIRTY_ONE_SCORE = 31;
+
 		public enum ScoreType
 		{
 			HisHeels,

@@ -16,6 +16,15 @@ namespace CribbageEngine.Play
 
         private List<Player> _players = new List<Player>();
 
+        private IScoreBoard _scoreBoard;
+
+        public Game() { }
+
+        public Game(IScoreBoard scoreBoard)
+		{
+            this._scoreBoard = scoreBoard;
+		}
+
         public void RegisterPlayer(Player player)
 		{
             if (_players.Count >= MAX_PLAYERS)
@@ -46,6 +55,14 @@ namespace CribbageEngine.Play
 			{
                 return _players;
 			}
+		}
+
+        internal void RackScore(RoundPlayer player, PlayScore newScore)
+		{
+            if (_scoreBoard != null)
+            {
+                _scoreBoard.RackScore(player, newScore);
+            }
 		}
 
         public Round Start()
