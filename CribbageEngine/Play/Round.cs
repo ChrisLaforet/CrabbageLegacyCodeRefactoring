@@ -43,6 +43,8 @@ namespace CribbageEngine.Play
 
 		public bool IsStarted { get; private set; }
 
+		public bool IsFinished { get; private set; }
+
 		private void AssertIsNotStarted()
 		{
 			if (IsStarted)
@@ -183,6 +185,7 @@ namespace CribbageEngine.Play
 			{
 				PlaySession();
 			}
+			IsFinished = true;
 		}
 
 		private bool PlayersHaveCards()
@@ -203,10 +206,10 @@ namespace CribbageEngine.Play
 			{
 				if (player.Score >= Evaluation.GAME_WINNING_SCORE)
 				{
-					return true;
+					return false;
 				}
 			}
-			return false;
+			return true;
 		}
 
 		private void RotatePlayer()
@@ -221,11 +224,14 @@ namespace CribbageEngine.Play
 
 		private void PlaySession()
 		{
+			AssertPlayIsStarted();
+
 			List<Card> sessionCards = new List<Card>();
 			int sessionScore = 0;
 
 			RoundPlayer currentPlayer = NextPlayer;
 			RotatePlayer();
+			bool gotPass = false;
 			while (PlayersHaveCards())
 			{
 				bool playLegal = true;
@@ -247,7 +253,16 @@ namespace CribbageEngine.Play
 						{
 							currentPlayer.AddScores(scores);
 						}
+						gotPass = false;
 					}
+				}
+				else if (gotPass)		// TODO: Logic will have to change for 3 players eventually
+				{
+					break;
+				}
+				else
+				{
+					gotPass = true;
 				}
 				if (playLegal)
 				{

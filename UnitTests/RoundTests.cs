@@ -33,26 +33,12 @@ namespace UnitTests
 			}
 		}
 
-		[Ignore("Delete eventually - exceptions are thrown when crib card counts are accepted ahead of this check")]
 		[Test]
-		public void givenAStartedRound_whenPlayStartIsInvoked_thenThrowsExceptionIfCribIsNotPrepared()
-		{
-			Game game = Prepare2PlayerGame();
-			Round round = game.Start();
-			round.Start();
-			Assert.Throws(typeof(CribNotProvidedException), () => round.StartPlay());
-		}
-
-		[Test]
-		public void givenARound_whenBanking2CribCards_then2CardsAreAcceptedFromEachPlayer()
+		public void givenARound_whenBankingCribCards_then2CardsAreAcceptedFromEachPlayer()
 		{
 			Game game = Prepare2PlayerGame();
 			Round round = game.Start();
 			Card[] cards = CreateTwoCardCrib();
-			foreach (var player in game.Players)
-			{
-				(player as TestPlayer).SetMockCribCards(cards);
-			}
 			round.Start();
 			round.StartPlay();
 			Assert.AreEqual(4, round.Crib.Count());
@@ -63,43 +49,13 @@ namespace UnitTests
 		{
 			Game game = Prepare2PlayerGame();
 			Round round = game.Start();
-			Card[] cards = new Card[1];
-			cards[0] = new Card(Card.FaceType.Ace, Card.SuitType.Clubs);
 			foreach (var player in game.Players)
 			{
-				(player as TestPlayer).SetMockCribCards(cards);
+				(player as TestPlayer).DoShortCribCards = true;
 			}
 
 			round.Start();
 			Assert.Throws(typeof(InvalidCribCardCountException), () => round.StartPlay());
-		}
-
-		[Test]
-		public void givenARound_whenBankingTooManyCribCards_thenThrowsException()
-		{
-			Game game = Prepare2PlayerGame();
-			Round round = game.Start();
-			Card[] cards = new Card[3];
-			cards[0] = new Card(Card.FaceType.Ace, Card.SuitType.Clubs);
-			cards[1] = new Card(Card.FaceType.Queen, Card.SuitType.Diamonds);
-			cards[2] = new Card(Card.FaceType.King, Card.SuitType.Diamonds);
-			round.Start();
-			Assert.Throws(typeof(InvalidCribCardCountException), () => round.StartPlay());
-		}
-
-		[Ignore("Delete eventually - exceptions are thrown when crib card counts are accepted ahead of this check")]
-		[Test]
-		public void givenARound_whenPlayStartedWithoutFullCrib_thenThrowsException()
-		{
-			Game game = Prepare2PlayerGame();
-			Round round = game.Start();
-			Card[] cards = CreateTwoCardCrib();
-			foreach (var player in game.Players)
-			{
-				(player as TestPlayer).SetMockCribCards(cards);
-			}
-			round.Start();
-			Assert.Throws(typeof(CribNotProvidedException), () => round.StartPlay());
 		}
 
 		[Test]
@@ -107,25 +63,35 @@ namespace UnitTests
 		{
 			Game game = Prepare2PlayerGame();
 			Round round = game.Start();
-			Card[] cards = CreateTwoCardCrib();
 			round.Start();
-			foreach (var player in game.Players)
-			{
-				(player as TestPlayer).SetMockCribCards(cards);
-			}
 			round.StartPlay();
 			Assert.IsTrue(round.IsPlayStarted);
 		}
 
-		//[Test]
-		//public void givenARound_whenPlayStarted_thenRoundPlayContinuesUntilPlayersCardsDepleted()
-		//{
-		//	Game game = Prepare2PlayerGame();
-		//	Round round = game.Start();
-		//	round.Start();
+		[Test]
+		public void givenARound_whenPlayStarted_thenRoundPlayContinuesUntilPlayersCardsDepleted()
+		{
+			Game game = Prepare2PlayerGame();
+			Round round = game.Start();
+			round.Start();
+			round.StartPlay();
+			Assert.IsTrue(round.IsFinished);
+		}
 
-		//}
-
+		[Test]
+		public void givenARound_whenPlayContinuesToEnd_thenPlayersScoresAreNotZero()
+		{
+			Game game = Prepare2PlayerGame();
+			Round round = game.Start();
+			round.Start();
+			round.StartPlay();
+			int total = 0;
+			foreach (var player in game.Players)
+			{
+				total += player.Score;
+			}
+			Assert.IsTrue(total > 0);
+		}
 
 		//--------------------------------
 
