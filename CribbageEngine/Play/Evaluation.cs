@@ -23,7 +23,7 @@ namespace CribbageEngine.Play
         public const int GoValue = 1;
         public const int ThirtyOneValue = 2;
 
-        public static PlayScore[] EvaluatePlayHand(Card[] playOrderedCards)
+        public static PlayScore[] EvaluatePlaySession(Card[] playOrderedCards)
 		{
             List<PlayScore> playScores = new List<PlayScore>();
 
@@ -41,12 +41,12 @@ namespace CribbageEngine.Play
                 playScores.Add(new PlayScore(PlayScore.ScoreType.Play_ThirtyOne, ThirtyOneValue));
             }
 
-            if (playOrderedCards.Length > 1)
+            if (playOrderedCards.Count() > 1)
 			{
                 Card[] lastPlayedOrder = playOrderedCards.Reverse().ToArray();
                 Card.FaceType toMatch = lastPlayedOrder[0].Face;
                 int matches = 0;
-                for (int index = 1; index < lastPlayedOrder.Length; index++)
+                for (int index = 1; index < lastPlayedOrder.Count(); index++)
 				{
                     if (lastPlayedOrder[index].Face != toMatch)
 					{
@@ -73,7 +73,7 @@ namespace CribbageEngine.Play
                 int runCount = 1;
                 int lastValue = lastPlayedOrder[0].Value;
                 bool isAscending = false;
-                for (int index = 1; index < lastPlayedOrder.Length; index++)
+                for (int index = 1; index < lastPlayedOrder.Count(); index++)
 				{
                     int value = lastPlayedOrder[index].Value;
                     if (index == 1)
@@ -265,7 +265,7 @@ namespace CribbageEngine.Play
             // If the cut card IS ALSO the same suit as the rest: 5 points (1 extra point)
             // If counting crib, flush requires all hand cards and started to be the same suit for 5 pts
 
-            for (int index = 1; index < playCards.Length; index++)
+            for (int index = 1; index < playCards.Count(); index++)
 			{
                 if (playCards[index].Suit != playCards[0].Suit)
 				{

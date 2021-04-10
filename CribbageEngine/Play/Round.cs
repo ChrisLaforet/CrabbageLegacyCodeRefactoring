@@ -266,7 +266,7 @@ namespace CribbageEngine.Play
 					{
 						sessionCards.Add(card);
 						sessionScore += card.Value;
-						PlayScore[] scores = Evaluation.EvaluatePlayHand(sessionCards.ToArray());
+						PlayScore[] scores = Evaluation.EvaluatePlaySession(sessionCards.ToArray());
 						if (scores.Length > 0)
 						{
 							currentPlayer.AddScores(scores);
