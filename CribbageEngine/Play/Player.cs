@@ -46,6 +46,8 @@ namespace CribbageEngine.Play
             this.Score += points; 
 		}
 
+        public abstract Card[] BankCribCards();
+
         public abstract IPlayResponse Play(Card[] sessionCards);
     }
 }

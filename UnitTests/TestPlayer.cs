@@ -9,6 +9,11 @@ namespace UnitTests
 
 		public TestPlayer(String playerName) : base(playerName) { }
 
+		public override Card[] BankCribCards()
+		{
+			throw new NotImplementedException();
+		}
+
 		public override IPlayResponse Play(Card[] sessionCards)
 		{
 			throw new NotImplementedException();

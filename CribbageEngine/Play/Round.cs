@@ -127,6 +127,16 @@ namespace CribbageEngine.Play
 				}
 			}
 			this.IsStarted = true;
+
+			foreach (Player player in Game.Players)
+			{
+				Card[] cardsForCrib = player.BankCribCards();
+				if (cardsForCrib.Length != 2)
+				{
+					throw new InvalidCribCardCountException("2 cards required from each player for crib");
+				}
+				BankCribCards(cardsForCrib);
+			}
 		}
 
 		public void StartPlay()

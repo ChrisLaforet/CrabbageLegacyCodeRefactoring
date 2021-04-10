@@ -33,14 +33,6 @@ namespace UnitTests
 			}
 		}
 
-		private static Game Prepare2PlayerGame()
-		{
-			Game game = new Game();
-			game.RegisterPlayer(new TestPlayer(PlayerTests.PLAYER1_NAME));
-			game.RegisterPlayer(new TestPlayer(PlayerTests.PLAYER2_NAME));
-			return game;
-		}
-
 		[Test]
 		public void givenAStartedRound_whenPlayStartIsInvoked_thenThrowsExceptionIfCribIsNotPrepared()
 		{
@@ -107,6 +99,26 @@ namespace UnitTests
 			round.BankCribCards(cards);
 			round.StartPlay();
 			Assert.IsTrue(round.IsPlayStarted);
+		}
+
+		//[Test]
+		//public void givenARound_whenPlayStarted_thenRoundPlayContinuesUntilPlayersCardsDepleted()
+		//{
+		//	Game game = Prepare2PlayerGame();
+		//	Round round = game.Start();
+		//	round.Start();
+
+		//}
+
+
+		//--------------------------------
+
+		private static Game Prepare2PlayerGame()
+		{
+			Game game = new Game();
+			game.RegisterPlayer(new TestPlayer(PlayerTests.PLAYER1_NAME));
+			game.RegisterPlayer(new TestPlayer(PlayerTests.PLAYER2_NAME));
+			return game;
 		}
 
 		private static Card[] CreateTwoCardCrib()
