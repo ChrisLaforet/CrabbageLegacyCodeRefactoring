@@ -8,6 +8,8 @@ namespace UnitTests
 	{
 		private Stack<Card> _hand = new Stack<Card>();
 
+		private Card[] _playHand;
+
 		public TestPlayer() : base() { }
 
 		public TestPlayer(String playerName) : base(playerName) { }
@@ -22,6 +24,8 @@ namespace UnitTests
 			Card[] crib = new Card[2];
 			crib[0] = _hand.Pop();
 			crib[1] = _hand.Pop();
+
+			_playHand = GetHand();
 			return crib;
 		}
 
@@ -50,6 +54,11 @@ namespace UnitTests
 		public override Card[] GetHand()
 		{
 			return _hand.ToArray();
+		}
+
+		public override Card[] GetPlayHand()
+		{
+			return _playHand;
 		}
 
 		public override bool HasCards()

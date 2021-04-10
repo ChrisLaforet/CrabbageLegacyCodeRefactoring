@@ -85,6 +85,14 @@ namespace CribbageEngine.Play
 			}
 		}
 
+		private void AssertPlayIsFinished()
+		{
+			if (!IsFinished)
+			{
+				throw new OperationNotPermittedException("Round play is not finished");
+			}
+		}
+
 		public Card StarterCard { get; private set; }
 
 		public Game Game { get; private set; }
@@ -102,16 +110,12 @@ namespace CribbageEngine.Play
 				_crib.Add(card);
 			}
 		}
-		private void BankCribCards(IList<Card> cards)
-		{
-			this.BankCribCards(cards.ToArray());
-		}
 
-		public IList<Card> Crib
+		public Card[] Crib
 		{
 			get
 			{
-				return _crib;
+				return _crib.ToArray();
 			}
 		}
 
@@ -137,8 +141,25 @@ namespace CribbageEngine.Play
 
 			PrepareCrib();
 			CutDeckAndGetStarterCard();
-			FindFirstPlayer();
+
+			_nextPlayerIndex = FindFirstPlayer();
+
 			PlayRound();
+		}
+
+		public void CalculateAfterPlayScores()
+		{
+			AssertPlayIsFinished();
+			int firstPlayerIndex = FindFirstPlayer();
+			for (int index = 0; index < _players.Count; ++index)
+			{
+				RoundPlayer player = _players[(index + firstPlayerIndex) % _players.Count];
+				player.AddScores(Evaluation.EvaluateFullHand(player.Player.GetPlayHand(), StarterCard, false));
+				if (player.Player.IsDealer)
+				{
+					player.AddScores(Evaluation.EvaluateFullHand(Crib, StarterCard, true));
+				}
+			}
 		}
 
 		private void PrepareCrib()
@@ -163,20 +184,17 @@ namespace CribbageEngine.Play
 			}
 		}
 
-		private void FindFirstPlayer()
+		private int FindFirstPlayer()
 		{
 			if (_players[0].Player.IsDealer)
 			{
-				_nextPlayerIndex = 1;
+				return 1;
 			} 
 			else if (_players.Count > 2 && _players[1].Player.IsDealer)
 			{
-				_nextPlayerIndex = 2;
+				return 2;
 			}
-			else
-			{
-				_nextPlayerIndex = 0;
-			}
+			return 0;
 		}
 
 		private void PlayRound() 

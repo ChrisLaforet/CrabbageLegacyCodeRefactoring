@@ -26,6 +26,8 @@ namespace CribbageEngine.Play
 
         public abstract Card[] GetHand();
 
+        public abstract Card[] GetPlayHand();
+
         public abstract bool HasCards();
 
         public int Score { get; private set;  }

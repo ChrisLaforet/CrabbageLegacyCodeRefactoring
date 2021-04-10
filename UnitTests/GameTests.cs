@@ -54,14 +54,14 @@ namespace UnitTests
 			game.RegisterPlayer(new TestPlayer(PlayerTests.PLAYER1_NAME));
 			game.RegisterPlayer(new TestPlayer(PlayerTests.PLAYER2_NAME));
 
-			Assert.IsNotNull(game.Start());
+			Assert.IsNotNull(game.StartRound());
 		}
 
 		[Test]
 		public void givenAGame_whenStartedWithoutMinumumNumberOfPlayers_thenThrowsException()
 		{
 			Game game = new Game();
-			Assert.Throws(typeof(NotEnoughPlayersException), () => game.Start());
+			Assert.Throws(typeof(NotEnoughPlayersException), () => game.StartRound());
 		}
 
 		[Test]
@@ -72,7 +72,7 @@ namespace UnitTests
 			dealer.IsDealer = true;
 			game.RegisterPlayer(dealer);
 			game.RegisterPlayer(new TestPlayer(PlayerTests.PLAYER2_NAME));
-			game.Start();
+			game.StartRound();
 
 			Assert.IsTrue(game.Players.Last().IsDealer);
 		}
@@ -85,7 +85,7 @@ namespace UnitTests
 			game.RegisterPlayer(player1);
 			Player player2 = new TestPlayer(PlayerTests.PLAYER2_NAME);
 			game.RegisterPlayer(player2);
-			game.Start();
+			game.StartRound();
 
 			Assert.IsTrue(player2.IsDealer);
 			Assert.AreEqual(player2, game.Players.Last());

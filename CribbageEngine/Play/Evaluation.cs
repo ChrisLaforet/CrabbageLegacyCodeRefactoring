@@ -70,7 +70,7 @@ namespace CribbageEngine.Play
                         break;
 				}
 
-                int sequenceCount = 1;
+                int runCount = 1;
                 int lastValue = lastPlayedOrder[0].Value;
                 bool isAscending = false;
                 for (int index = 1; index < lastPlayedOrder.Length; index++)
@@ -82,14 +82,11 @@ namespace CribbageEngine.Play
 						{
                             isAscending = true;
 						}
-                        else if (lastValue - 1 != value)
-						{
-						}
 					}
                     if (isAscending && value == lastValue + 1 ||
                         !isAscending && value == lastValue - 1)
 					{
-                        ++sequenceCount;
+                        ++runCount;
                         lastValue = value;
 					}
                     else
@@ -97,9 +94,9 @@ namespace CribbageEngine.Play
                         break;
 					}
 				}
-                if (sequenceCount >= 3)
+                if (runCount >= 3)
 				{
-                    playScores.Add(new PlayScore(PlayScore.ScoreType.Play_Sequence, sequenceCount));
+                    playScores.Add(new PlayScore(PlayScore.ScoreType.Play_Run, runCount));
 				}
             }
             return playScores.ToArray();
@@ -115,138 +112,110 @@ namespace CribbageEngine.Play
             return runningScore;
 		}
 
-        public static int EvaluateFullHand(Card[] cards, int cutIndex)
+        public static PlayScore[] EvaluateFullHand(Card[] playCards, Card starterCard, bool isCrib)
         {
-            //Evaluates the 5 cards according to the rules of Cribbage
+            List<PlayScore> playScores = new List<PlayScore>();
 
-            //The cut card is treated differently than the rest for knobs and flush purposes
-            //Could assume that the last card is always the cut card but that isn't very cohesive
+            // Evaluates the 5 cards according to the rules of Cribbage
+            // The cut "starter" card is treated differently than the rest for knobs and flush purposes
 
-            //return 29;
+            var faces = new Card.FaceType[playCards.Count() + 1];
+            var values = new int[playCards.Count() + 1];
 
-            if (cutIndex < cards.Count())
+            for (int index = 0; index < playCards.Count(); index++)
             {
-                var faces = new Card.FaceType[cards.Count()];
-                var faceVals = new int[(int)Card.FaceType.King + 1];
-                var suits = new Card.SuitType[cards.Count()];
-                var values = new int[cards.Count()];
-
-                for (int index = 0; index < cards.Count(); index++)
-                {
-                    faces[index] = cards[index].Face;
-                    faceVals[(int)cards[index].Face]++;
-                    suits[index] = cards[index].Suit;
-                    values[index] = cards[index].Value;
-                }
-
-                int fifteens = FindFifteens(values);
-                int pairs = FindPairs(faces);
-                int runs = FindRuns(faceVals);
-                int knobs = FindKnobs(cards, cutIndex);
-                int flush = IsFlush(suits, cutIndex);
-
-                //foreach(var card in cards)
-                //{
-                //    Console.WriteLine(card);
-                //}
-
-                //Console.WriteLine("Fifteens: {0}", fifteens);
-                //Console.WriteLine("Pairs   : {0}", pairs);
-                //Console.WriteLine("Runs    : {0}", runs);
-                //Console.WriteLine("Knobs   : {0}", knobs);
-                //Console.WriteLine("Flush   : {0}", flush);
-                //Console.ReadKey();
-
-                int total = fifteens + pairs + runs + flush + knobs;
-                
-                //Console.WriteLine("Total: {0}", total);
-                //Console.ReadKey();
-
-                return total;
+                faces[index] = playCards[index].Face;
+                values[index] = playCards[index].Value;
             }
-            else
+            faces[playCards.Count()] = starterCard.Face;
+            values[playCards.Count()] = starterCard.Value;
+
+            playScores.AddRange(FindFifteens(values));
+            playScores.AddRange(FindPairs(faces));
+            playScores.AddRange(FindRuns(playCards, starterCard));
+            PlayScore playScore = FindKnobs(playCards, starterCard);
+            if (playScore != null)
+			{
+                playScores.Add(playScore);
+			}
+            playScore = IsFlush(playCards, starterCard, isCrib);
+            if (playScore != null)
             {
-                throw new ArgumentException("CutIndex out of range!");
+                playScores.Add(playScore);
             }
+
+            return playScores.ToArray();
         }
 
-        static int FindFifteens(int[] values)
+        private static PlayScore[] FindFifteens(int[] values)
         {
             //HOYLE RULES:
             //Every way to make 15 in your hand is worth 2 points each
 
-            //It might be worth changing this to support other values than 15
-            //It wouldn't be Cribbage anymore, but supporting more than 5 cards isn't Cribbage either
+            List<PlayScore> playScores = new List<PlayScore>();
             int sum = 0;
-            int total = 0;
 
             //Looks at every possible combo you can make from cards in hand
             foreach (var combo in HelperFunctions.GetPowerSet(values.Count()))
             {
-                foreach (int i in combo)
+                foreach (int index in combo)
                 {
-                    //Sums all values
-                    sum += values[i];
-                    //No point checking any more if we already went over
-                    if (sum > 15) break;
+                    sum += values[index];
+                    if (sum > PlayScore.FIFTEEN_SCORE) 
+                        break;
                 }
-                if (sum == 15)
+                if (sum == PlayScore.FIFTEEN_SCORE)
                 {
-                    //This combo was indeed a 15
-                    total += FifteenValue;
+                    playScores.Add(new PlayScore(PlayScore.ScoreType.Combination_Fifteen, FifteenValue));
                 }
                 sum = 0;
             }
-            return total;
+            return playScores.ToArray();
         }
 
-        static int FindPairs(Card.FaceType[] faces)
+        private static PlayScore[] FindPairs(Card.FaceType[] faces)
         {
-            //HOYLE RULES:
-            //Pair: 2 points, Triple: 6 points, Quad: 12 points
-            //Although that's just the rule of thumb. Technically all pairs are just worth 2 points, 
-            //  3 of a kind is 3 pairs
-            int total = 0;
+            List<PlayScore> playScores = new List<PlayScore>();
 
             //Handshake all of the cards together - pretty simple
-            for (int index = 0; index < faces.Count(); index++)
+            for (int startIndex = 0; startIndex < faces.Count(); startIndex++)
             {
-                for (int j = index + 1; j < faces.Count(); j++)
+                for (int remainingIndex = startIndex + 1; remainingIndex < faces.Count(); remainingIndex++)
                 {
-                    if (faces[index] == faces[j])
+                    if (faces[startIndex] == faces[remainingIndex])
                     {
-                        total += PairValue;
+                        playScores.Add(new PlayScore(PlayScore.ScoreType.Combination_Pair, PairValue));
                     }
                 }
             }
-            return total;
+
+            return playScores.ToArray();
         }
 
-        static int FindRuns(int[] faceVals)
+        private static PlayScore[] FindRuns(Card[] playCards, Card starterCard)
         {
-            int total = 0;
-            int multiplier = 0;
-            int consec = 0;
+            var faceValMap = new int[(int)Card.FaceType.King + 1];
+            for (int index = 0; index < playCards.Count(); index++)
+            {
+                faceValMap[(int)playCards[index].Face]++;
+            }
+            faceValMap[(int)starterCard.Face]++;
 
-            for (int index = 0; index < faceVals.Count(); index++)
+            List<PlayScore> playScores = new List<PlayScore>();
+            int multiplier = 0;
+            int totalInSequence = 0;
+
+            for (int index = 0; index < faceValMap.Count(); index++)
             {
                 //Run is over - or hasn't begin
-                if (faceVals[index] == 0)
+                if (faceValMap[index] == 0)
                 {
                     //When leaving run, generate point report
-                    if (consec >= 3)
+                    if (totalInSequence >= 3)
                     {
-                        total += multiplier * consec;
-                        consec = 0;
-                        multiplier = 0;
-
-                        //It's not possible to have two disconnected runs in (5 card) Cribbage
-                        //TODO: Remove this break for > 5 card cribbage
-                        break;
+                        playScores.Add(new PlayScore(PlayScore.ScoreType.Combination_Run, multiplier * totalInSequence));
                     }
-                    //No more consecutiveness 
-                    consec = 0;
-                    //No more multiplicativeness
+                    totalInSequence = 0;
                     multiplier = 0;
                 }
                 else
@@ -255,69 +224,64 @@ namespace CribbageEngine.Play
                     {
                         multiplier = 1;
                     }
-                    //Consecutive multiplier allows double double run to be counted as 4
-                    multiplier *= faceVals[index];
-                    consec++;
+                    //Consecutive multiplier allows double-double run to be counted as 4
+                    multiplier *= faceValMap[index];
+                    totalInSequence++;
                 }
             }
-            //Store end-of-hand run
-            if (consec >= 3)
+
+            if (totalInSequence >= 3)
             {
-                total += multiplier * consec;
+                playScores.Add(new PlayScore(PlayScore.ScoreType.Combination_Run, multiplier * totalInSequence));
             }
-            return total;
+            return playScores.ToArray();
         }
 
-        static int FindKnobs(Card[] cards, int cutIndex)
+        private static PlayScore FindKnobs(Card[] playCards, Card starterCard)
         {
             //HOYLE RULES:
             //If a Jack in your hand has a suit matching that of the 
             //card that gets cut up, you have knobs
 
             //Knobs can't exist if the cut card is a Jack
-            if (cards[cutIndex].Face != Card.FaceType.Jack)
+            if (starterCard.Face == Card.FaceType.Jack)
+                return null;
+
+            foreach (Card card in playCards)
             {
-                //Stores the suit of the cut card to check later
-                var cutSuit = cards[cutIndex].Suit;
-                
-                foreach (Card card in cards)
+                //Check all cards for knobs
+                if (card.Face == Card.FaceType.Jack && card.Suit == starterCard.Suit)
                 {
-                    //Check all cards for knobs
-                    if (card.Face == Card.FaceType.Jack && card.Suit == cutSuit)
-                    {
-                        return KnobsValue;
-                    }
+                    return new PlayScore(PlayScore.ScoreType.HisNobs, KnobsValue);
                 }
             }
-            return 0;
+            return null;
         }
 
-        static int IsFlush(Card.SuitType[] suits, int cutIndex)
+        private static PlayScore IsFlush(Card[] playCards, Card starterCard, bool isCrib)
         {
             //HOYLE RULES:
-            //If all the cards in the hand are the same suit: 4 points (1 per card?)
-            //If the cut card IS ALSO the same suit as the rest: 5 points (1 extra point)
+            // If all the cards in the hand are the same suit: 4 points (1 per card?)
+            // If the cut card IS ALSO the same suit as the rest: 5 points (1 extra point)
+            // If counting crib, flush requires all hand cards and started to be the same suit for 5 pts
 
-            //Choose the first suit that isn't the cut card
-            var suit = suits[cutIndex != 0 ? 0 : 1];
-            
-            for (int index = 0; index < suits.Count(); index++)
-            {
-                //Check all suits in the hand
-                if (index != cutIndex && suits[index] != suit)
-                {
-                    //There was a card with a different suit
-                    return 0;
-                }
-            }
-            if (suits[cutIndex] != suit)
-            {
-                return suits.Count() - 1;
-            }
-            else
-            {
-                return suits.Count();
-            }
+            for (int index = 1; index < playCards.Length; index++)
+			{
+                if (playCards[index].Suit != playCards[0].Suit)
+				{
+                    return null;
+				}
+			}
+
+            if (starterCard.Suit == playCards[0].Suit)
+			{
+                return new PlayScore(PlayScore.ScoreType.Combination_Flush, 5);
+			}
+            else if (!isCrib)
+			{
+                return new PlayScore(PlayScore.ScoreType.Combination_Flush, 4);
+			}
+            return null;
         }
     }
 }

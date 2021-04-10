@@ -65,7 +65,7 @@ namespace CribbageEngine.Play
             }
 		}
 
-        public Round Start()
+        public Round StartRound()
 		{
             if (Dealer == null && _players.Count > 0)
 			{

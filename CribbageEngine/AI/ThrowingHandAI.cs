@@ -144,7 +144,8 @@ namespace CribbageEngine.AI
                 //Swaps out fifth card for all possible cut cards
                 fullHand.SetValue(card, lastCardIndex);
                 //Adds outcome of cut card to weighted average
-                value += (Evaluation.EvaluateFullHand(fullHand, lastCardIndex) * ((double)1/(Deck.NumCards - _size)));
+// TODO: fix evaluation
+//                value += (Evaluation.EvaluateFullHand(fullHand, lastCardIndex) * ((double)1/(Deck.NumCards - _size)), false);
             }
             return value;
         }
@@ -180,7 +181,8 @@ namespace CribbageEngine.AI
                     {
                         fullCrib[i + thrownCards.Count()] = HandComplement[combo[i]];
                     }
-                    value += ((Evaluation.EvaluateFullHand(fullCrib, cutCard) / (possibilities)));
+// TODO: fix evaluation
+//                    value += ((Evaluation.EvaluateFullHand(fullCrib, cutCard) / (possibilities)));
                 }
             }
 

@@ -20,7 +20,7 @@ namespace CribbageEngine.Play
 			Play_Pair,
 			Play_Triplet,
 			Play_Four,
-			Play_Sequence,
+			Play_Run,
 			Play_Go,
 			Play_ThirtyOne,
 			Combination_Fifteen,
