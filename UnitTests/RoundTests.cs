@@ -33,6 +33,7 @@ namespace UnitTests
 			}
 		}
 
+		[Ignore("Delete eventually - exceptions are thrown when crib card counts are accepted ahead of this check")]
 		[Test]
 		public void givenAStartedRound_whenPlayStartIsInvoked_thenThrowsExceptionIfCribIsNotPrepared()
 		{
@@ -43,14 +44,18 @@ namespace UnitTests
 		}
 
 		[Test]
-		public void givenARound_whenBanking2CribCards_then2CardsAreAccepted()
+		public void givenARound_whenBanking2CribCards_then2CardsAreAcceptedFromEachPlayer()
 		{
 			Game game = Prepare2PlayerGame();
 			Round round = game.Start();
 			Card[] cards = CreateTwoCardCrib();
+			foreach (var player in game.Players)
+			{
+				(player as TestPlayer).SetMockCribCards(cards);
+			}
 			round.Start();
-			round.BankCribCards(cards);
-			Assert.AreEqual(2, round.Crib.Count());
+			round.StartPlay();
+			Assert.AreEqual(4, round.Crib.Count());
 		}
 
 		[Test]
@@ -60,8 +65,13 @@ namespace UnitTests
 			Round round = game.Start();
 			Card[] cards = new Card[1];
 			cards[0] = new Card(Card.FaceType.Ace, Card.SuitType.Clubs);
+			foreach (var player in game.Players)
+			{
+				(player as TestPlayer).SetMockCribCards(cards);
+			}
+
 			round.Start();
-			Assert.Throws(typeof(InvalidCribCardCountException), () => round.BankCribCards(cards));
+			Assert.Throws(typeof(InvalidCribCardCountException), () => round.StartPlay());
 		}
 
 		[Test]
@@ -74,17 +84,21 @@ namespace UnitTests
 			cards[1] = new Card(Card.FaceType.Queen, Card.SuitType.Diamonds);
 			cards[2] = new Card(Card.FaceType.King, Card.SuitType.Diamonds);
 			round.Start();
-			Assert.Throws(typeof(InvalidCribCardCountException), () => round.BankCribCards(cards));
+			Assert.Throws(typeof(InvalidCribCardCountException), () => round.StartPlay());
 		}
 
+		[Ignore("Delete eventually - exceptions are thrown when crib card counts are accepted ahead of this check")]
 		[Test]
 		public void givenARound_whenPlayStartedWithoutFullCrib_thenThrowsException()
 		{
 			Game game = Prepare2PlayerGame();
 			Round round = game.Start();
 			Card[] cards = CreateTwoCardCrib();
+			foreach (var player in game.Players)
+			{
+				(player as TestPlayer).SetMockCribCards(cards);
+			}
 			round.Start();
-			round.BankCribCards(cards);
 			Assert.Throws(typeof(CribNotProvidedException), () => round.StartPlay());
 		}
 
@@ -95,8 +109,10 @@ namespace UnitTests
 			Round round = game.Start();
 			Card[] cards = CreateTwoCardCrib();
 			round.Start();
-			round.BankCribCards(cards);
-			round.BankCribCards(cards);
+			foreach (var player in game.Players)
+			{
+				(player as TestPlayer).SetMockCribCards(cards);
+			}
 			round.StartPlay();
 			Assert.IsTrue(round.IsPlayStarted);
 		}

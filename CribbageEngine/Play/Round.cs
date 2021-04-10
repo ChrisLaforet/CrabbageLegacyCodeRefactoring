@@ -87,7 +87,7 @@ namespace CribbageEngine.Play
 
 		public Game Game { get; private set; }
 
-		public void BankCribCards(Card[] cards)
+		private void BankCribCards(Card[] cards)
 		{
 			AssertIsStarted();
 			AssertPlayIsNotStarted();
@@ -100,8 +100,7 @@ namespace CribbageEngine.Play
 				_crib.Add(card);
 			}
 		}
-
-		public void BankCribCards(IList<Card> cards)
+		private void BankCribCards(IList<Card> cards)
 		{
 			this.BankCribCards(cards.ToArray());
 		}
@@ -127,35 +126,39 @@ namespace CribbageEngine.Play
 				}
 			}
 			this.IsStarted = true;
-
-			foreach (Player player in Game.Players)
-			{
-				Card[] cardsForCrib = player.BankCribCards();
-				if (cardsForCrib.Length != 2)
-				{
-					throw new InvalidCribCardCountException("2 cards required from each player for crib");
-				}
-				BankCribCards(cardsForCrib);
-			}
 		}
 
 		public void StartPlay()
 		{
 			AssertIsStarted();
 			AssertPlayIsNotStarted();
+
+			PrepareCrib();
+			CutDeckAndGetStarterCard();
+			FindFirstPlayer();
+			PlayRound();
+		}
+
+		private void PrepareCrib()
+		{
+			foreach (Player player in Game.Players)
+			{
+				BankCribCards(player.BankCribCards());
+			}
+
 			if (_crib.Count != Game.Players.Count * PER_PLAYER_CRIB_CARD_COUNT)
 			{
 				throw new CribNotProvidedException("Crib cards have not been banked by all players");
 			}
+		}
 
+		private void CutDeckAndGetStarterCard()
+		{
 			this.StarterCard = _deck.GetStarterCard();
 			if (this.StarterCard.Face == Card.FaceType.Jack)
 			{
 				this.GetDealer().AddScore(PlayScore.ScoreType.HisHeels, Evaluation.HeelsValue);
 			}
-
-			FindFirstPlayer();
-			PlayRound();
 		}
 
 		private void FindFirstPlayer()
