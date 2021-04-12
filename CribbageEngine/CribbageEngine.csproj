@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\AIPlayer.cs" />
+    <Compile Include="AI\ICribStrategy.cs" />
+    <Compile Include="AI\IPlayStrategy.cs" />
     <Compile Include="Exceptions\InvalidStateException.cs" />
     <Compile Include="Exceptions\OperationNotPermittedException.cs" />
     <Compile Include="Exceptions\InvalidCribCardCountException.cs" />
