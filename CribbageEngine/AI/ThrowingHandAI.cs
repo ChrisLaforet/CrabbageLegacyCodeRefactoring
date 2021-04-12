@@ -18,7 +18,7 @@ namespace CribbageEngine.AI
             DeoptimizeCrib,
             //GREEDY algorithm, always takes best hand (much faster)
             IgnoreCrib,
-            //STUPID algorith, always takes random hand
+            //STUPID algorithm, always takes random hand
             Random,
             Invalid
         }
