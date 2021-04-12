@@ -42,6 +42,11 @@ namespace CribbageEngine.Play
         public SuitType Suit { get; private set; }
         public FaceType Face { get; private set; }
 
+        public const double ChanceOfAValueOf10 = 16 / 52.0;
+        public const double ChanceOfAPair = 3 / 52.0;
+        public const double ChanceOfASecondPair = 2 / 52.0;
+        public const double ChanceOfValueOf5 = 4 / 52.0;
+
         public int Value
         {
             get
