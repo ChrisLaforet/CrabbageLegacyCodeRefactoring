@@ -22,7 +22,7 @@ namespace CribbageEngine.Play
 
         public bool IsDealer { get; set; }
 
-        public abstract void AddCard(Card card);
+        public abstract void AcceptDealCard(Card card);
 
         public abstract Card[] GetHand();
 

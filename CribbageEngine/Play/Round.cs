@@ -128,7 +128,7 @@ namespace CribbageEngine.Play
 			{
 				foreach (Player player in Game.Players)
 				{
-					player.AddCard(_deck.Draw());
+					player.AcceptDealCard(_deck.Draw());
 				}
 			}
 			this.IsStarted = true;

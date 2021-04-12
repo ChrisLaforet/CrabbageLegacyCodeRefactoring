@@ -23,7 +23,7 @@ namespace CribbageEngine.AI
 			this._playCardSelector = playCardSelector;
 		}
 
-		public override void AddCard(Card card)
+		public override void AcceptDealCard(Card card)
 		{
 			_activeCards.Add(card);
 		}

@@ -14,7 +14,7 @@ namespace UnitTests
 		{
 			Card card = new Card(Card.FaceType.Queen, Card.SuitType.Clubs);
 			Player player = new TestPlayer();
-			player.AddCard(card);
+			player.AcceptDealCard(card);
 			Assert.AreEqual(card, player.GetHand()[0]);
 		}
 

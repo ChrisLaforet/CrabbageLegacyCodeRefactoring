@@ -46,7 +46,7 @@ namespace UnitTests
 			return Pass.PassResponse;
 		}
 
-		public override void AddCard(Card card)
+		public override void AcceptDealCard(Card card)
 		{
 			_hand.Push(card);
 		}
