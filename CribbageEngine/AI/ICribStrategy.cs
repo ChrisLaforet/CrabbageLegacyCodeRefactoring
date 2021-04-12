@@ -37,12 +37,24 @@ namespace CribbageEngine.AI
 		}
 	}
 
-
 	/// <summary>
 	/// The opposite of the BestScoring strategy, best reserved
 	/// for a player who will not get the crib back.
 	/// </summary>
 	public class WorstScoringCribStrategy : ICribStrategy
+	{
+		public Card[] BankCribCards(bool isDealer, Card[] activeCards)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	/// <summary>
+	/// Another approach for both dealer and non-dealer which
+	/// populates the crib with whatever remains after optimizing
+	/// the points that can be achieved in the count of the hand.
+	/// </summary>
+	public class OptimalHandCribStrategy : ICribStrategy
 	{
 		public Card[] BankCribCards(bool isDealer, Card[] activeCards)
 		{
