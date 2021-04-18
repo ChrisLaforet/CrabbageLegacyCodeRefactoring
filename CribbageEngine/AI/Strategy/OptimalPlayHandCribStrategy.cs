@@ -1,4 +1,5 @@
 ﻿using CribbageEngine.Play;
+using CribbageEngine.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,37 @@ namespace CribbageEngine.AI.Strategy
 	{
 		public Card[] BankCribCards(bool isDealer, Card[] activeCards)
 		{
-			throw new NotImplementedException();
+			List<PlayingHand> bestPlayingHands = CardHelperFunctions.GetBestPlayingHands(activeCards);
+			if (bestPlayingHands.Count() == 1)
+			{
+				return CardHelperFunctions.ExtractCribCards(activeCards, bestPlayingHands[0]);
+			}
+
+			int maxCribValue = 0;
+			Card[] maxCrib = new Card[0];
+			int minCribValue = int.MaxValue;
+			Card[] minCrib = maxCrib;
+			foreach (PlayingHand hand in bestPlayingHands)
+			{
+				Card[] crib = CardHelperFunctions.ExtractCribCards(activeCards, hand);
+				int value = crib[0].Value + crib[1].Value;
+				if (value > maxCribValue)
+				{
+					maxCribValue = value;
+					maxCrib = crib;
+				}
+				if (value < minCribValue)
+				{
+					minCribValue = value;
+					minCrib = crib;
+				}
+			}
+			
+			if (isDealer)
+			{
+				return maxCrib;
+			}
+			return minCrib;
 		}
 	}
 }

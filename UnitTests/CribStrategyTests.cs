@@ -78,6 +78,15 @@ namespace UnitTests
 		}
 
 		[Test]
+		public void givenAHandOfCardsContainingPairOfTen_whenUsingBestScoringCribStrategy_thenCribCardsContainPairOfTen()
+		{
+			BestScoringCribStrategy strategy = new BestScoringCribStrategy();
+			Card[] crib = strategy.BankCribCards(true, GetHandWithPairOfTens());
+			Assert.AreEqual(2, crib.Length);
+			Assert.AreEqual(2, CardHelperFunctions.CountCardsWithValueOfTen(crib, true));
+		}
+
+		[Test]
 		public void givenAHandOfCardsContainingSumOfFfteen_whenUsingBestScoringCribStrategyForDealer_thenCribCardsSumToFifteen()
 		{
 			BestScoringCribStrategy strategy = new BestScoringCribStrategy();
@@ -86,15 +95,24 @@ namespace UnitTests
 			Assert.AreEqual(15, crib[0].Value + crib[1].Value);
 		}
 
-		//[Test]
-		//public void givenAHandOfCardsContainingSumOfFfteen_whenUsingBestScoringCribStrategyForNonDealer_thenCribCardsSumToFifteen()
-		//{
-		//	BestScoringCribStrategy strategy = new BestScoringCribStrategy();
-		//	Card[] crib = strategy.BankCribCards(true, GetHandWithPairOfTens());
-		//	Assert.AreEqual(2, crib.Length);
-		//	Assert.AreEqual(15, crib[0].Value + crib[1].Value);
-		//}
-		
+		[Test]
+		public void givenAHandOfCards_whenUsingOptimalPlayHandCribStrategyForDealer_thenCribCardsAreMaximized()
+		{
+			OptimalHandCribStrategy strategy = new OptimalHandCribStrategy();
+			Card[] crib = strategy.BankCribCards(true, GetMultiplePatternCards());
+			Assert.AreEqual(2, crib.Length);
+			Assert.AreEqual(5, crib[0].Value + crib[1].Value);
+		}
+
+		[Test]
+		public void givenAHandOfCards_whenUsingOptimalPlayHandCribStrategyForNonDealer_thenCribCardsAreMinimized()
+		{
+			OptimalHandCribStrategy strategy = new OptimalHandCribStrategy();
+			Card[] crib = strategy.BankCribCards(true, GetMultiplePatternCards());
+			Assert.AreEqual(2, crib.Length);
+			Assert.AreEqual(5, crib[0].Value + crib[1].Value);
+		}
+
 
 		//--------------
 
@@ -161,12 +179,24 @@ namespace UnitTests
 		private Card[] GetHandWithPairOfTens()
 		{
 			List<Card> cards = new List<Card>();
-			cards.Add(new Card(Card.FaceType.Eight, Card.SuitType.Hearts));
-			cards.Add(new Card(Card.FaceType.Six, Card.SuitType.Spades));
+			cards.Add(new Card(Card.FaceType.Nine, Card.SuitType.Hearts));
+			cards.Add(new Card(Card.FaceType.Three, Card.SuitType.Spades));
 			cards.Add(new Card(Card.FaceType.Ten, Card.SuitType.Clubs));
 			cards.Add(new Card(Card.FaceType.Jack, Card.SuitType.Diamonds));
-			cards.Add(new Card(Card.FaceType.Two, Card.SuitType.Clubs));
-			cards.Add(new Card(Card.FaceType.Four, Card.SuitType.Hearts));
+			cards.Add(new Card(Card.FaceType.Seven, Card.SuitType.Clubs));
+			cards.Add(new Card(Card.FaceType.Ten, Card.SuitType.Hearts));
+			return cards.ToArray();
+		}
+
+		private Card[] GetMultiplePatternCards()
+		{
+			List<Card> cards = new List<Card>();
+			cards.Add(new Card(Card.FaceType.Two, Card.SuitType.Hearts));
+			cards.Add(new Card(Card.FaceType.Five, Card.SuitType.Spades));
+			cards.Add(new Card(Card.FaceType.Three, Card.SuitType.Clubs));
+			cards.Add(new Card(Card.FaceType.Ten, Card.SuitType.Diamonds));
+			cards.Add(new Card(Card.FaceType.Ten, Card.SuitType.Clubs));
+			cards.Add(new Card(Card.FaceType.Jack, Card.SuitType.Hearts));
 			return cards.ToArray();
 		}
 	}
