@@ -1,5 +1,6 @@
 ﻿using CribbageEngine.Exceptions;
 using CribbageEngine.Play;
+using CribbageEngine.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CribbageEngine.Play
 {
-    public static class Evaluation
+	public static class Evaluation
     {
         public const int GAME_WINNING_SCORE = 121;
 

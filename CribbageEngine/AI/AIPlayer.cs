@@ -1,4 +1,5 @@
-﻿using CribbageEngine.Exceptions;
+﻿using CribbageEngine.AI.Strategy;
+using CribbageEngine.Exceptions;
 using CribbageEngine.Play;
 using System;
 using System.Collections.Generic;

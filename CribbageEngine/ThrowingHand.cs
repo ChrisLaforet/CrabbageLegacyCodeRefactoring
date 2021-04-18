@@ -1,4 +1,5 @@
 ﻿using CribbageEngine.Play;
+using CribbageEngine.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace CribbageEngine
 {
-    //DESCRIPTION:      This class handles the logic between dealing and pegging
-    //                  By MVC, View should be able to mark cards as thrown before actually throwing
-    //PRECONDITIONS:    Deck must be initialized and contain at least enough cards to populate
-    //                  a starting hand (usually 6)
-    //POSTCONDITIONS:   This class will contain two things:
-    //                  FinalHand   - An array of 4 Cards used for pegging and conuting
-    //                  ThrownCards - An array of 0-2 (usually 2) Cards that will be sent to the crib
+	//DESCRIPTION:      This class handles the logic between dealing and pegging
+	//                  By MVC, View should be able to mark cards as thrown before actually throwing
+	//PRECONDITIONS:    Deck must be initialized and contain at least enough cards to populate
+	//                  a starting hand (usually 6)
+	//POSTCONDITIONS:   This class will contain two things:
+	//                  FinalHand   - An array of 4 Cards used for pegging and conuting
+	//                  ThrownCards - An array of 0-2 (usually 2) Cards that will be sent to the crib
 
-    public class ThrowingHand
+	public class ThrowingHand
     {
         //CONSTANTS
         protected const int DefaultStartingHandSize = 6;

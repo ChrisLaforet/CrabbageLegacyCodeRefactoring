@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static CribbageEngine.AI.ThrowingHandAI;
 
 namespace CribbageEngine.AI
 {
@@ -10,6 +11,7 @@ namespace CribbageEngine.AI
 	{
         public static int[] GetOptimalThrow(ThrowingStrategy strategy)
         {
+/*
             //This is the AI, automatically chooses which cards to throw away
             //DESCRIPTION:
             //THERE ARE TWO THINGS THE AI NEEDS TO CONSIDER:
@@ -39,11 +41,13 @@ namespace CribbageEngine.AI
                 }
             }
             return best;
+*/
+return new int[0];
         }
 
         private static double AnalyzeThrow(int[] keep, ThrowingStrategy strategy)
         {
-            //Get weighted average of both sides of this option
+ /*           //Get weighted average of both sides of this option
             double handScore = AnalyzeHand(keep);
             double cribScore;
             double score;
@@ -112,47 +116,49 @@ namespace CribbageEngine.AI
                 //                value += (Evaluation.EvaluateFullHand(fullHand, lastCardIndex) * ((double)1/(Deck.NumCards - _size)), false);
             }
             return value;
+*/
+return 0;
         }
 
-        private static double AnalyzeCrib(int[] keep)
-        {
-            var deck = HandComplement;
+        //private static double AnalyzeCrib(int[] keep)
+        //{
+        //    var deck = HandComplement;
 
-            //value is the weighted average of all possible hands
-            double value = 0.0;
+        //    //value is the weighted average of all possible hands
+        //    double value = 0.0;
 
-            var fullCrib = new Card[FullHandSize];
-            //Holds the 0-2 cards that the user has thrown away
-            var thrownCards = GetRest(keep);
+        //    var fullCrib = new Card[FullHandSize];
+        //    //Holds the 0-2 cards that the user has thrown away
+        //    var thrownCards = GetRest(keep);
 
-            //Generates first initial crib cards from keep array
-            thrownCards.CopyTo(fullCrib, 0);
+        //    //Generates first initial crib cards from keep array
+        //    thrownCards.CopyTo(fullCrib, 0);
 
-            //How many ways are there to finish the crib?
-            //In other words, how many ways are there to choose 3 cards from a deck of 46?
-            //In other words, a lot!
-            var combos = HelperFunctions.GetKCombination(deck.Count() - _size, FullHandSize - thrownCards.Count());
-            int possibilities = combos.Count();
+        //    //How many ways are there to finish the crib?
+        //    //In other words, how many ways are there to choose 3 cards from a deck of 46?
+        //    //In other words, a lot!
+        //    var combos = HelperFunctions.GetKCombination(deck.Count() - _size, FullHandSize - thrownCards.Count());
+        //    int possibilities = combos.Count();
 
-            foreach (var combo in combos)
-            {
-                //There are cases where the cutIndex is NOT needed (no Jacks, two different suits in hand)
-                //For now we will ignore that, but it may be able to squeeze out a little performance
-                for (int cutCard = thrownCards.Count(); cutCard < FullHandSize; cutCard++)
-                {
-                    //For each possible combo, finish the crib and evaluate
-                    for (int i = 0; i < combo.Count(); i++)
-                    {
-                        fullCrib[i + thrownCards.Count()] = HandComplement[combo[i]];
-                    }
-                    // TODO: fix evaluation
-                    // value += ((Evaluation.EvaluateFullHand(fullCrib, cutCard) / (possibilities)));
-                }
-            }
+        //    foreach (var combo in combos)
+        //    {
+        //        //There are cases where the cutIndex is NOT needed (no Jacks, two different suits in hand)
+        //        //For now we will ignore that, but it may be able to squeeze out a little performance
+        //        for (int cutCard = thrownCards.Count(); cutCard < FullHandSize; cutCard++)
+        //        {
+        //            //For each possible combo, finish the crib and evaluate
+        //            for (int i = 0; i < combo.Count(); i++)
+        //            {
+        //                fullCrib[i + thrownCards.Count()] = HandComplement[combo[i]];
+        //            }
+        //            // TODO: fix evaluation
+        //            // value += ((Evaluation.EvaluateFullHand(fullCrib, cutCard) / (possibilities)));
+        //        }
+        //    }
 
-            return value;
-        }
+        //    return value;
+        //}
     }
 
 }
-}
+

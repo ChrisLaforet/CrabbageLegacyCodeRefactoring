@@ -1,4 +1,5 @@
 ﻿using CribbageEngine.Play;
+using CribbageEngine.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CribbageEngine.AI
 {
-    public class ThrowingHandAI : ThrowingHand
+	public class ThrowingHandAI : ThrowingHand
     {
         public enum ThrowingStrategy
         {

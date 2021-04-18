@@ -13,7 +13,7 @@ namespace CribbageEngine.AI
 	}
 
 	/// <summary>
-	/// Foolish basic stratgy of tossing the first valid card
+	/// Foolish basic strategy of tossing the first valid card
 	/// that doesn't bust 31 out into the play.
 	/// </summary>
 	public class FCFSPlayStrategy : IPlayStrategy

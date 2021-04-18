@@ -3,10 +3,11 @@ using CribbageEngine.Exceptions;
 using NUnit.Framework;
 using System.Collections.Generic;
 using CribbageEngine.AI;
+using CribbageEngine.AI.Strategy;
 
 namespace UnitTests
 {
-	public class AITests
+	public class AIPlayerTests
 	{
 		[Test]
 		public void givenAnAIPlayer_whenRequestingCribCards_thenReturns2CardsFromActiveCardsAndReducesHandTo4Cards()
