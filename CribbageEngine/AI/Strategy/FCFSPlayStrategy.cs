@@ -5,13 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CribbageEngine.AI
+namespace CribbageEngine.AI.Strategy
 {
-	public interface IPlayStrategy
-	{
-		Card SelectNextCard(bool isDealer, Card[] sessionCards, Card[] activeCards);
-	}
-
 	/// <summary>
 	/// Foolish basic strategy of tossing the first valid card
 	/// that doesn't bust 31 out into the play.
@@ -42,4 +37,5 @@ namespace CribbageEngine.AI
 			return null;
 		}
 	}
+
 }

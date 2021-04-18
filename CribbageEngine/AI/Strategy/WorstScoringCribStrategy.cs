@@ -15,7 +15,8 @@ namespace CribbageEngine.AI.Strategy
 	{
 		public Card[] BankCribCards(bool isDealer, Card[] activeCards)
 		{
-			throw new NotImplementedException();
+			OptimalHandCribStrategy strategy = new OptimalHandCribStrategy();
+			return strategy.BankCribCards(false, activeCards);
 		}
 	}
 }

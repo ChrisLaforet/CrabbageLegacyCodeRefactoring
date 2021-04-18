@@ -45,10 +45,12 @@
     <Compile Include="AI\AIPlayer.cs" />
     <Compile Include="AI\Strategy\BestScoringCribStrategy.cs" />
     <Compile Include="AI\Strategy\FCFSCribStrategy.cs" />
+    <Compile Include="AI\Strategy\FCFSPlayStrategy.cs" />
     <Compile Include="AI\Strategy\ICribStrategy.cs" />
-    <Compile Include="AI\IPlayStrategy.cs" />
+    <Compile Include="AI\Strategy\IPlayStrategy.cs" />
     <Compile Include="AI\StrategyAnalysis.cs" />
     <Compile Include="AI\Strategy\OptimalPlayHandCribStrategy.cs" />
+    <Compile Include="AI\Strategy\OptimalPlayStrategy.cs" />
     <Compile Include="AI\Strategy\WorstScoringCribStrategy.cs" />
     <Compile Include="Exceptions\InvalidStateException.cs" />
     <Compile Include="Exceptions\OperationNotPermittedException.cs" />
