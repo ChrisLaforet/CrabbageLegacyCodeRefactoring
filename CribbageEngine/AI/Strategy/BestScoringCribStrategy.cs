@@ -27,28 +27,46 @@ namespace CribbageEngine.AI.Strategy
 
 			// Ok, let's try a 5 and a 10 value being careful with possible
 			// Nobs in the crib if not the dealer
-			int tenValues = CardHelperFunctions.CountCardsWithValueOfTen(activeCards, !isDealer);
-			if (fives == 1 && tenValues > 0)
+			List<Card> cardsOfTen = CardHelperFunctions.FindCardsWithValueOfTen(activeCards, !isDealer);
+			if (fives == 1 && cardsOfTen.Count() > 0)
 			{
-				List<Card> cardsOfTen = CardHelperFunctions.FindCardsWithValueOfTen(activeCards, !isDealer);
-
 				Card[] crib = new Card[2];
 				crib[0] = CardHelperFunctions.FindCardsWithFaceType(activeCards, Card.FaceType.Five)[0];
 				crib[1] = cardsOfTen[0];
+				return crib;
 			}
 
 			// pairs are next in value
+			List<CardPair> pairs = CardHelperFunctions.FindPairedCards(activeCards, !isDealer);
+			if (pairs.Count > 0)
+			{
+				return pairs[0].Cards;
+			}
 
 			// combinations that make 5 are next
+			List<CardPair> sumsOfFive = CardHelperFunctions.FindPairsThatMatchFive(activeCards);
+			if (sumsOfFive.Count > 0)
+			{
+				return sumsOfFive[0].Cards;
+			}
+
+			// sum matches 15
+			List<CardPair> fifteens = CardHelperFunctions.FindPairsThatMatchFifteen(activeCards, !isDealer);
+			if (fifteens.Count > 0)
+			{
+				return fifteens[0].Cards;
+			}
 
 			// two 10 values are next (in case a 5 combination shows up from the other hand)
-
+			if (cardsOfTen.Count() >= 2)
+			{
+				return cardsOfTen.GetRange(0, 2).ToArray();
+			}
 
 			// finally, throw whatever cannot hurt the playing hand
+			List<PlayingHand> bestPlayingHands = CardHelperFunctions.GetBestPlayingHands(activeCards);
 
-
-
-			throw new NotImplementedException();
+			return CardHelperFunctions.ExtractCribCards(activeCards, bestPlayingHands[0]);
 		}
 	}
 }

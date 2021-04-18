@@ -64,6 +64,7 @@
     <Compile Include="Exceptions\DeckOutOfCardsException.cs" />
     <Compile Include="Play\Game.cs" />
     <Compile Include="Utility\CardHelperFunctions.cs" />
+    <Compile Include="Utility\CardPair.cs" />
     <Compile Include="Utility\HelperFunctions.cs" />
     <Compile Include="Play\IPlayResponse.cs" />
     <Compile Include="Play\IScoreBoard.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Play\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AI\ThrowingHandAI.cs" />
+    <Compile Include="Utility\PlayingHand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
