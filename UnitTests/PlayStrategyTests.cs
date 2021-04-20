@@ -51,6 +51,30 @@ namespace UnitTests
 			Assert.AreEqual(Card.FaceType.Five, playedCard.Face);
 		}
 
+		[Test]
+		public void givenPlayHandWithOnlyFivesAndTens_whenPlayingAgainstFiveWithOptimalPlayStrategy_thenPlaysTen()
+		{
+			OptimalPlayStrategy strategy = new OptimalPlayStrategy();
+			Card playedCard = strategy.SelectNextCard(true, GetOneCardSession(Card.FaceType.Five, Card.SuitType.Hearts), getHandWithFivesAndTens());
+			Assert.AreEqual(Card.FaceType.Ten, playedCard.Face);
+		}
+
+		[Test]
+		public void givenMixedPlayHand_whenPlayingAgainstNineWithOptimalPlayStrategy_thenBreaks15()
+		{
+			OptimalPlayStrategy strategy = new OptimalPlayStrategy();
+			Card playedCard = strategy.SelectNextCard(true, GetOneCardSession(Card.FaceType.Nine, Card.SuitType.Hearts), getMixedHand());
+			Assert.AreEqual(Card.FaceType.Nine, playedCard.Face);
+		}
+
+		[Test]
+		public void givenMixedPlayHand_whenPlayingAgainstSevenWithOptimalPlayStrategy_thenPlaysPair()
+		{
+			OptimalPlayStrategy strategy = new OptimalPlayStrategy();
+			Card playedCard = strategy.SelectNextCard(true, GetOneCardSession(Card.FaceType.Seven, Card.SuitType.Hearts), getMixedHand());
+			Assert.AreEqual(Card.FaceType.Seven, playedCard.Face);
+		}
+
 		//------------------
 
 		private Card[] GetOneCardSession(Card.FaceType face, Card.SuitType suit)
@@ -87,6 +111,16 @@ namespace UnitTests
 			cards.Add(new Card(Card.FaceType.Five, Card.SuitType.Spades));
 			cards.Add(new Card(Card.FaceType.Five, Card.SuitType.Diamonds));
 			cards.Add(new Card(Card.FaceType.Five, Card.SuitType.Hearts));
+			return cards.ToArray();
+		}
+
+		private Card[] getMixedHand()
+		{
+			List<Card> cards = new List<Card>();
+			cards.Add(new Card(Card.FaceType.Seven, Card.SuitType.Clubs));
+			cards.Add(new Card(Card.FaceType.Nine, Card.SuitType.Spades));
+			cards.Add(new Card(Card.FaceType.Ace, Card.SuitType.Diamonds));
+			cards.Add(new Card(Card.FaceType.Ten, Card.SuitType.Hearts));
 			return cards.ToArray();
 		}
 	}
