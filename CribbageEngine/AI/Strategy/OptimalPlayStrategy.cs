@@ -13,6 +13,7 @@ namespace CribbageEngine.AI.Strategy
 		public Card SelectNextCard(bool isDealer, Card[] sessionCards, Card[] activeCards)
 		{
 			bool isFirstCard = sessionCards.Count() == 0;
+			bool isExistingPair = DetermineIfExistingPair(sessionCards);
 			int currentTotal = CardHelperFunctions.CountScoreOfCards(sessionCards);
 
 			if (currentTotal >= (PlayScore.THIRTY_ONE_SCORE - 10))
@@ -42,18 +43,39 @@ namespace CribbageEngine.AI.Strategy
 			}
 			else if (currentTotal < PlayScore.FIFTEEN_SCORE)
 			{
-				Card card = TryForScoring15(activeCards, currentTotal);
+				Card card;
+				if (isExistingPair)
+				{
+					card = TryForScoringPair(activeCards, sessionCards[sessionCards.Count() - 1], currentTotal);
+					if (card != null)
+					{
+						return card;
+					}
+				}
+				card = TryForScoring15(activeCards, currentTotal);
 				if (card != null)
 				{
 					return card;
 				}
-				card = TryForScoringPair(activeCards, sessionCards[sessionCards.Count() - 1], currentTotal);
-				if (card != null)
+				if (!isExistingPair)
 				{
-					return card;
+					card = TryForScoringPair(activeCards, sessionCards[sessionCards.Count() - 1], currentTotal);
+					if (card != null)
+					{
+						return card;
+					}
 				}
 			}
 			return TryForLargestPossibleCard(activeCards, currentTotal);
+		}
+
+		private bool DetermineIfExistingPair(Card[] activeCards)
+		{
+			if (activeCards.Count() < 2)
+			{
+				return false;
+			}
+			return activeCards[activeCards.Count() - 1].Face == activeCards[activeCards.Count() - 2].Face;
 		}
 
 		private Card TryForScoring31(Card[] activeCards, int currentTotal)

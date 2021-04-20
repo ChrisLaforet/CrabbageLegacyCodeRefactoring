@@ -75,12 +75,30 @@ namespace UnitTests
 			Assert.AreEqual(Card.FaceType.Seven, playedCard.Face);
 		}
 
+		[Test]
+		public void givenMixedPlayHand_whenPlayingAgainstTwoSevensWithOptimalPlayStrategy_thenPlaysForSeven()
+		{
+			OptimalPlayStrategy strategy = new OptimalPlayStrategy();
+			Card playedCard = strategy.SelectNextCard(true,
+				GetTwoCardSession(Card.FaceType.Seven, Card.SuitType.Hearts, Card.FaceType.Seven, Card.SuitType.Diamonds), 
+				getMixedHand());
+			Assert.AreEqual(Card.FaceType.Seven, playedCard.Face);
+		}
+
 		//------------------
 
 		private Card[] GetOneCardSession(Card.FaceType face, Card.SuitType suit)
 		{
 			Card[] cards = new Card[1];
 			cards[0] = new Card(face, suit);
+			return cards;
+		}
+
+		private Card[] GetTwoCardSession(Card.FaceType face1, Card.SuitType suit1, Card.FaceType face2, Card.SuitType suit2)
+		{
+			Card[] cards = new Card[2];
+			cards[0] = new Card(face1, suit1);
+			cards[1] = new Card(face2, suit2);
 			return cards;
 		}
 
