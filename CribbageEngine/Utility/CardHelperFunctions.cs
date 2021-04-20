@@ -39,6 +39,17 @@ namespace CribbageEngine.Utility
 			return matches;
 		}
 
+		public static int CountScoreOfCards(IEnumerable<Card> cards)
+		{
+			int total = 0;
+			foreach (Card card in cards)
+			{
+				if (card != null)
+					total += card.Value;
+			}
+			return total;
+		}
+
 		public static List<Card> FindCardsWithFaceType(IEnumerable<Card> cards, Card.FaceType faceType)
 		{
 			List<Card> matches = new List<Card>();

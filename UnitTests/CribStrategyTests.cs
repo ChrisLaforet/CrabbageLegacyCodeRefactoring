@@ -74,7 +74,7 @@ namespace UnitTests
 			BestScoringCribStrategy strategy = new BestScoringCribStrategy();
 			Card[] crib = strategy.BankCribCards(true, GetHandWithSumOfFive());
 			Assert.AreEqual(2, crib.Length);
-			Assert.AreEqual(5, crib[0].Value + crib[1].Value);
+			Assert.AreEqual(5, CardHelperFunctions.CountScoreOfCards(crib));
 		}
 
 		[Test]
@@ -92,7 +92,7 @@ namespace UnitTests
 			BestScoringCribStrategy strategy = new BestScoringCribStrategy();
 			Card[] crib = strategy.BankCribCards(true, GetHandWithSumOfFifteen());
 			Assert.AreEqual(2, crib.Length);
-			Assert.AreEqual(15, crib[0].Value + crib[1].Value);
+			Assert.AreEqual(15, CardHelperFunctions.CountScoreOfCards(crib));
 		}
 
 		[Test]
@@ -101,7 +101,7 @@ namespace UnitTests
 			OptimalHandCribStrategy strategy = new OptimalHandCribStrategy();
 			Card[] crib = strategy.BankCribCards(true, GetMultiplePatternCards());
 			Assert.AreEqual(2, crib.Length);
-			Assert.AreEqual(5, crib[0].Value + crib[1].Value);
+			Assert.AreEqual(5, CardHelperFunctions.CountScoreOfCards(crib));
 		}
 
 		[Test]
@@ -110,7 +110,7 @@ namespace UnitTests
 			OptimalHandCribStrategy strategy = new OptimalHandCribStrategy();
 			Card[] crib = strategy.BankCribCards(true, GetMultiplePatternCards());
 			Assert.AreEqual(2, crib.Length);
-			Assert.AreEqual(5, crib[0].Value + crib[1].Value);
+			Assert.AreEqual(5, CardHelperFunctions.CountScoreOfCards(crib));
 		}
 
 
