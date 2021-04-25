@@ -11,17 +11,22 @@ namespace CribbageEngine.AI
 {
 	public class AIPlayer : Player
 	{
-		private List<Card> _activeCards = new List<Card>();
+		private readonly List<Card> _activeCards = new List<Card>();
 		private List<Card> _playHand = new List<Card>();
 
-		private ICribStrategy _cribCardSelector;
-		private IPlayStrategy _playCardSelector;
+		private readonly ICribStrategy _cribCardSelector;
+		private readonly IPlayStrategy _playCardSelector;
 
-		public AIPlayer(ICribStrategy cribCardSelector, IPlayStrategy playCardSelector) 
-			: base("AIPlayer")
+		public AIPlayer(String name, ICribStrategy cribCardSelector, IPlayStrategy playCardSelector)
+			: base(name)
 		{
 			this._cribCardSelector = cribCardSelector;
 			this._playCardSelector = playCardSelector;
+		}
+
+		public AIPlayer(ICribStrategy cribCardSelector, IPlayStrategy playCardSelector) 
+			: this("AIPlayer", cribCardSelector, playCardSelector)
+		{
 		}
 
 		public override void AcceptDealCard(Card card)

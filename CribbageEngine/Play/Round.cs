@@ -230,6 +230,18 @@ namespace CribbageEngine.Play
 			return true;
 		}
 
+		public Player GetWinner()
+		{
+			foreach (RoundPlayer player in _players)
+			{
+				if (player.Score >= Evaluation.GAME_WINNING_SCORE)
+				{
+					return player.Player;
+				}
+			}
+			return null;
+		}
+
 		private void RotatePlayer()
 		{
 			_nextPlayerIndex = (_nextPlayerIndex + 1) % _players.Count;
@@ -250,7 +262,7 @@ namespace CribbageEngine.Play
 			RoundPlayer currentPlayer = NextPlayer;
 			RotatePlayer();
 			bool gotPass = false;
-			while (PlayersHaveCards())
+			while (PlayersHaveCards() && PlayerIsNotWinner())
 			{
 				bool playLegal = true;
 				IPlayResponse response = currentPlayer.Play(sessionCards.ToArray());
